@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="JobCards is the applicant-side ATS. AI screens job listings, filters the noise, and gives you a curated deck of opportunities worth your time.">
+<meta name="description" content="JobCards is the applicant-side ATS: an AI job-search agent, curated job deck, application pipeline, and applicant analytics dashboard in one place.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://jobcards.io/">
 
@@ -29,7 +29,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<title>JobCards.io — AI Job Search & Applicant-Side ATS</title>
+<title>JobCards.io — AI Job Search, Applicant ATS & Application Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -284,7 +284,7 @@ h1{
   text-transform:uppercase;
 }
 
-/* Worth Your Time Gauge */
+/* Worth a Look Gauge */
 .match-score-unit{
   display:flex;
   align-items:center;
@@ -847,6 +847,571 @@ body{background:
 .seo-summary strong{color:var(--text-main)}
 </style>
 
+
+<style id="fullsite-rich-css">
+.section-kicker{
+  font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent-purple);margin-bottom:14px
+}
+.product-intro{padding:74px 0 30px}
+.intro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:end}
+.intro-grid h2,.feature-showcase h2,.how-strip h2,.manifesto-band h2{
+  font-size:clamp(34px,4.4vw,54px);line-height:1.03;letter-spacing:-1.8px
+}
+.intro-grid p,.showcase-copy>p{font-size:16px;line-height:1.7;color:var(--text-muted)}
+.mini-flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.mini-flow span{padding:8px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border-strong);font-size:11px;font-weight:900;letter-spacing:.6px}
+.mini-flow b{color:var(--accent-purple)}
+.feature-showcase{
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr);
+  gap:70px;align-items:center;padding:92px 0;border-top:1px solid var(--border)
+}
+.feature-showcase.reverse{grid-template-columns:minmax(420px,1.1fr) minmax(0,.9fr)}
+.showcase-copy h2{margin-bottom:18px}
+.clean-list{list-style:none;display:grid;gap:11px;margin:24px 0 22px}
+.clean-list li{display:flex;gap:10px;font-weight:700;font-size:13.5px}
+.clean-list li span{color:var(--accent-purple)}
+.text-link{color:var(--accent-purple);font-weight:900;text-decoration:none;font-size:13px}
+.text-link:hover{text-decoration:underline}
+.product-panel{
+  background:var(--surface);border:1.5px solid var(--border-strong);border-radius:28px;
+  padding:24px;box-shadow:0 28px 70px -22px rgba(20,20,22,.16)
+}
+.panel-topline{display:flex;justify-content:space-between;gap:14px;font-size:10.5px;font-weight:900;letter-spacing:.9px;color:var(--text-dim);margin-bottom:20px}
+.status-live{color:#087a45}
+.agent-stat-row,.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.agent-stat-row>div,.metric-grid>div{background:var(--surface-subtle);border:1px solid var(--border);padding:15px;border-radius:16px}
+.agent-stat-row small,.metric-grid small{display:block;font-size:9px;font-weight:900;letter-spacing:.8px;color:var(--text-dim)}
+.agent-stat-row strong,.metric-grid strong{display:block;font-size:23px;margin-top:4px}
+.filter-chip-row{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0}
+.filter-chip-row span{font-size:11px;font-weight:800;background:var(--accent-purple-soft);border:1px solid var(--accent-purple-border);color:var(--accent-purple);padding:6px 9px;border-radius:999px}
+.rule-box{background:#edf9f2;border:1px solid #b8eed2;border-radius:16px;padding:14px;margin-top:10px}
+.rule-box.muted{background:#f7f4ef;border-color:var(--border)}
+.rule-box b{font-size:10px;text-transform:uppercase;letter-spacing:.6px}
+.rule-box p{font-size:12px;margin-top:4px;color:var(--text-muted)}
+.mock-primary{width:100%;margin-top:16px;background:var(--accent-lime);padding:12px;border-radius:999px;font-weight:900}
+.mini-job-card{border:1px solid var(--border);border-radius:22px;padding:20px;background:#fff}
+.score-pill{display:inline-flex;font-size:10.5px;font-weight:900;color:#00695f;background:#e0faf5;border:1px solid #8fe3d4;padding:7px 10px;border-radius:999px}
+.mini-job-card h3{font-size:24px;margin:14px 0 2px}
+.mini-job-card>p{color:var(--text-muted);font-size:13px}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0}
+.signal-grid>div{padding:12px;border-radius:14px;font-size:11px}
+.signal-grid b,.signal-grid span{display:block}
+.signal-grid span{margin-top:4px;color:var(--text-muted)}
+.signal-grid .good{background:#edf9f2;border:1px solid #b8eed2}
+.signal-grid .warn{background:#fef7ec;border:1px solid #fde3c2}
+.mini-actions{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}
+.mini-actions button{padding:10px;border-radius:999px;border:1px solid var(--border-strong);font-size:10.5px;font-weight:900}
+.mini-actions .hot{background:var(--accent-lime);border-color:transparent}
+.deck-progress{text-align:center;color:var(--text-dim);font-size:10.5px;font-weight:800;margin-top:14px}
+.pipeline-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pipe-col{background:var(--surface-subtle);border:1px solid var(--border);padding:12px;border-radius:16px;min-width:0}
+.pipe-col>b{font-size:9px;color:var(--text-dim);letter-spacing:.7px}
+.pipe-col article{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;margin-top:9px}
+.pipe-col article span{font-size:9px;color:var(--accent-purple);font-weight:900}
+.pipe-col article strong,.pipe-col article small{display:block}
+.pipe-col article strong{font-size:11px;margin-top:3px}
+.pipe-col article small{font-size:9.5px;color:var(--text-dim);margin-top:2px}
+.metric-grid{grid-template-columns:repeat(4,1fr)}
+.insight-card{margin:16px 0;background:var(--accent-purple-soft);border:1px solid var(--accent-purple-border);padding:16px;border-radius:16px}
+.insight-card b,.insight-card strong{display:block}
+.insight-card b{font-size:10px;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.6px}
+.insight-card strong{font-size:18px;margin-top:5px}
+.insight-card p{font-size:11px;color:var(--text-muted);margin-top:5px}
+.bar-row{display:grid;grid-template-columns:70px 1fr 38px;gap:9px;align-items:center;margin-top:10px;font-size:10.5px;font-weight:800}
+.bar-row i{height:8px;border-radius:99px;background:linear-gradient(to right,var(--accent-purple) var(--w),var(--surface-subtle) var(--w));display:block}
+.how-strip{padding:86px 0;border-top:1px solid var(--border)}
+.how-strip>h2{max-width:760px}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.how-grid>div{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px}
+.how-grid span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent-lime);font-weight:900}
+.how-grid b{display:block;font-size:15px;margin:18px 0 6px}
+.how-grid p{font-size:12px;color:var(--text-muted)}
+.manifesto-band{margin:28px 0 68px;background:var(--accent-purple-soft);border:1px solid var(--accent-purple-border);border-radius:30px;padding:58px;text-align:center}
+.manifesto-band h2{margin-bottom:16px}
+.manifesto-band p{max-width:650px;margin:0 auto 24px;color:var(--text-muted);font-size:15.5px}
+@media(max-width:940px){
+  .intro-grid,.feature-showcase,.feature-showcase.reverse{grid-template-columns:1fr;gap:36px}
+  .feature-showcase{padding:68px 0}
+  .feature-showcase.reverse .product-panel{order:2}
+  .feature-showcase.reverse .showcase-copy{order:1}
+  .how-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .product-intro{padding-top:54px}
+  .agent-stat-row,.metric-grid,.pipeline-cols,.signal-grid,.how-grid{grid-template-columns:1fr}
+  .mini-actions{grid-template-columns:1fr}
+  .product-panel{padding:18px;border-radius:22px}
+  .manifesto-band{padding:42px 20px}
+}
+</style>
+
+
+<style id="swipe-ux-css">
+.swipe-stage{position:relative;max-width:510px;margin:0 auto;padding:6px 14px 2px}
+.swipe-topline{display:flex;justify-content:space-between;align-items:center;margin:0 6px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--text-dim);font-weight:800}
+.swipe-topline b{color:var(--accent-purple)}
+.swipe-stack{position:relative;height:490px;perspective:1100px;touch-action:pan-y}
+.swipe-card{position:absolute;inset:0;background:#fff;border:1.5px solid var(--border-strong);border-radius:32px;overflow:hidden;box-shadow:0 26px 70px -20px rgba(20,20,22,.22);transform-origin:50% 95%}
+.swipe-card.back{pointer-events:none}
+.back-3{transform:translateY(-22px) scale(.91) rotate(-3deg);background:#eee9de;opacity:.55}
+.back-2{transform:translateY(-11px) scale(.955) rotate(2deg);background:#f6f2ea;opacity:.9}
+.swipe-card.active{z-index:5;display:flex;flex-direction:column;cursor:grab;transition:transform .38s cubic-bezier(.2,.85,.25,1),opacity .28s ease}
+.swipe-card.active:active{cursor:grabbing}
+.swipe-card.dragging{transition:none}
+.swipe-card.fly-left{transform:translateX(-130%) rotate(-16deg)!important;opacity:0}
+.swipe-card.fly-right{transform:translateX(130%) rotate(16deg)!important;opacity:0}
+.swipe-card.fly-up{transform:translateY(-120%) scale(.92)!important;opacity:0}
+.swipe-card-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:24px 24px 6px}
+.swipe-card-head small{display:block;color:var(--text-dim);font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:8px}
+.score-chip{display:inline-flex;gap:6px;align-items:center;background:#e0faf5;border:1px solid #8fe3d4;color:#00695f;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:900}
+.score-chip span{font-size:15px}
+.company-mark{width:48px;height:48px;border-radius:16px;background:var(--accent-purple-soft);border:1px solid var(--accent-purple-border);display:grid;place-items:center;color:var(--accent-purple);font-weight:900}
+.swipe-card-body{padding:8px 24px 20px;display:flex;flex-direction:column;gap:13px;flex:1}
+.swipe-card-body h3{font-size:32px;line-height:1.05;letter-spacing:-1.25px;margin-top:5px}
+.swipe-card-body>p{font-size:14px;color:var(--text-muted);margin-bottom:2px}
+.swipe-signal{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:flex-start;border-radius:17px;padding:13px 14px}
+.swipe-signal>span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900}
+.swipe-signal b{font-size:11px;text-transform:uppercase;letter-spacing:.55px}
+.swipe-signal p{font-size:12.5px;line-height:1.45;margin-top:3px;color:var(--text-muted)}
+.swipe-signal.good{background:#edf9f2;border:1px solid #b8eed2}.swipe-signal.good>span{background:#d8f3e4;color:#087a45}
+.swipe-signal.watch{background:#fef7ec;border:1px solid #fde3c2}.swipe-signal.watch>span{background:#fde7c9;color:#9c5300}
+.swipe-footer{display:flex;justify-content:space-between;padding:13px 22px;border-top:1px solid var(--border);font-size:10.5px;font-weight:800;color:var(--text-dim)}
+.swipe-stamp{position:absolute;top:78px;z-index:10;border:4px solid currentColor;border-radius:12px;padding:7px 10px;font-size:26px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none}
+.stamp-pass{right:30px;color:#e35e64;transform:rotate(12deg)}.stamp-like{left:30px;color:#149b69;transform:rotate(-12deg)}
+.swipe-controls{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:26px}
+.swipe-circle{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid var(--border-strong);font-size:20px;font-weight:900;box-shadow:0 8px 22px rgba(20,20,22,.08);transition:transform .18s ease,box-shadow .18s ease}
+.swipe-circle:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(20,20,22,.12)}
+.swipe-circle.pass{color:#e35e64}.swipe-circle.save{color:var(--accent-purple);width:48px;height:48px}.swipe-circle.pursue{background:var(--accent-lime);border-color:transparent;color:#172000}
+.swipe-pagination{display:flex;justify-content:center;gap:7px;margin-top:15px}
+.swipe-pagination button{width:7px;height:7px;border-radius:999px;background:var(--border-strong);padding:0;transition:all .2s}
+.swipe-pagination button.active{width:25px;background:var(--accent-purple)}
+.swipe-caption{text-align:center;margin-top:9px;font-size:11px;color:var(--text-dim);font-weight:700}
+.ghost-line{height:12px;border-radius:999px;background:#ddd6ca;margin:24px}.ghost-line.w45{width:45%}.ghost-line.w55{width:55%}.ghost-line.w68{width:68%}.ghost-line.w72{width:72%}
+.ghost-box{height:210px;margin:28px 24px;border-radius:22px;background:#e7e0d5}
+@media(max-width:640px){
+  .swipe-stage{padding-inline:0}
+  .swipe-stack{height:470px}
+  .swipe-card{border-radius:26px}
+  .swipe-card-head{padding:20px 19px 6px}
+  .swipe-card-body{padding:7px 19px 17px}
+  .swipe-card-body h3{font-size:28px}
+  .swipe-footer{padding-inline:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .swipe-card.active,.swipe-circle,.swipe-pagination button{transition:none!important}
+}
+</style>
+
+
+<style id="autoswipe-size-polish">
+.swipe-stage{
+  max-width:430px;
+  padding:4px 12px 0;
+}
+.swipe-stack{
+  height:430px;
+}
+.swipe-card{
+  border-radius:28px;
+}
+.swipe-card-head{
+  padding:20px 20px 4px;
+}
+.swipe-card-body{
+  padding:6px 20px 16px;
+  gap:11px;
+}
+.swipe-card-body h3{
+  font-size:27px;
+  margin-top:3px;
+}
+.swipe-card-body>p{
+  font-size:13px;
+}
+.company-mark{
+  width:44px;height:44px;border-radius:14px;
+}
+.swipe-signal{
+  padding:11px 12px;
+  border-radius:15px;
+  grid-template-columns:25px 1fr;
+}
+.swipe-signal>span{
+  width:25px;height:25px;
+}
+.swipe-signal p{
+  font-size:11.8px;
+}
+.swipe-footer{
+  padding:11px 18px;
+  font-size:10px;
+}
+.back-3{transform:translateY(-17px) scale(.92) rotate(-3deg)}
+.back-2{transform:translateY(-8px) scale(.96) rotate(2deg)}
+.swipe-controls{
+  margin-top:20px;
+}
+.swipe-circle{
+  width:50px;height:50px;
+}
+.swipe-circle.save{
+  width:44px;height:44px;
+}
+.swipe-caption{
+  min-height:18px;
+}
+@media(max-width:940px){
+  .swipe-stage{max-width:410px}
+}
+@media(max-width:640px){
+  .swipe-stage{max-width:360px}
+  .swipe-stack{height:405px}
+  .swipe-card-body h3{font-size:24px}
+  .swipe-card-head{padding:17px 17px 3px}
+  .swipe-card-body{padding:5px 17px 13px}
+}
+</style>
+
+
+<style id="contained-card-fix">
+/* Keep the hero deck as a contained, phone-like object on laptop screens. */
+.hero{
+  align-items:center;
+}
+.swipe-stage{
+  width:min(100%, 380px);
+  max-width:380px;
+  margin-inline:auto;
+  padding:2px 10px 0;
+}
+.swipe-stack{
+  height:390px;
+}
+.swipe-card{
+  border-radius:26px;
+}
+.swipe-card-head{
+  padding:16px 17px 2px;
+}
+.swipe-card-body{
+  padding:4px 17px 12px;
+  gap:8px;
+}
+.swipe-card-body h3{
+  font-size:24px;
+  line-height:1.02;
+  margin-top:2px;
+}
+.swipe-card-body>p{
+  font-size:12px;
+  line-height:1.35;
+}
+.company-mark{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+}
+.score-chip{
+  padding:6px 9px;
+  font-size:10px;
+}
+.score-chip span{
+  font-size:14px;
+}
+.swipe-signal{
+  padding:9px 10px;
+  border-radius:14px;
+  grid-template-columns:22px 1fr;
+  gap:8px;
+}
+.swipe-signal>span{
+  width:22px;
+  height:22px;
+  font-size:12px;
+}
+.swipe-signal b{
+  font-size:9.5px;
+}
+.swipe-signal p{
+  font-size:10.8px;
+  line-height:1.35;
+}
+.swipe-footer{
+  padding:9px 15px;
+  font-size:9px;
+}
+.back-3{transform:translateY(-13px) scale(.925) rotate(-3deg)}
+.back-2{transform:translateY(-6px) scale(.962) rotate(2deg)}
+.swipe-controls{
+  margin-top:16px;
+  gap:15px;
+}
+.swipe-circle{
+  width:46px;
+  height:46px;
+  font-size:18px;
+}
+.swipe-circle.save{
+  width:42px;
+  height:42px;
+}
+.swipe-pagination{
+  margin-top:11px;
+}
+.swipe-caption{
+  margin-top:6px;
+  font-size:10px;
+}
+.swipe-topline{
+  margin:0 4px 10px;
+  font-size:10px;
+}
+/* Ensure the whole interaction fits comfortably above the fold on common laptops. */
+@media(min-width:941px){
+  .hero{
+    min-height:500px;
+    padding-top:42px;
+    padding-bottom:52px;
+  }
+}
+@media(max-width:940px){
+  .swipe-stage{
+    width:min(100%, 360px);
+    max-width:360px;
+  }
+  .swipe-stack{height:382px}
+}
+@media(max-width:640px){
+  .swipe-stage{
+    width:min(100%, 330px);
+    max-width:330px;
+  }
+  .swipe-stack{height:370px}
+  .swipe-card-head{padding:14px 15px 2px}
+  .swipe-card-body{padding:4px 15px 10px}
+  .swipe-card-body h3{font-size:22px}
+  .swipe-signal p{font-size:10.4px}
+  .swipe-controls{margin-top:14px}
+}
+</style>
+
+
+<style id="natural-swipe-transition">
+.swipe-card.active{
+  transition:
+    transform .56s cubic-bezier(.22,.85,.24,1),
+    opacity .34s ease;
+}
+.swipe-card.fly-left{
+  transform:translateX(-155%) rotate(-20deg) scale(.94)!important;
+  opacity:0!important;
+}
+.swipe-card.fly-right{
+  transform:translateX(155%) rotate(20deg) scale(.94)!important;
+  opacity:0!important;
+}
+.swipe-card.fly-up{
+  transform:translateY(-125%) scale(.9)!important;
+  opacity:0!important;
+}
+.swipe-card.enter-next{
+  transform:translateY(16px) scale(.965)!important;
+  opacity:0!important;
+}
+.swipe-card.enter-next.ready{
+  transform:translateY(0) scale(1)!important;
+  opacity:1!important;
+}
+</style>
+
+
+<style id="preference-filter-css">
+.hero-preferences{
+  grid-column:1 / -1;
+  margin:28px 0 18px;
+  padding:18px 20px;
+  border:1px solid var(--border-strong);
+  border-radius:22px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 16px 45px -32px rgba(20,20,22,.28);
+  backdrop-filter:blur(12px);
+}
+.pref-head{display:flex;justify-content:space-between;gap:18px;align-items:center}
+.pref-head small{display:block;font-size:9px;font-weight:900;letter-spacing:1px;color:var(--accent-purple);margin-bottom:4px}
+.pref-head strong{font-size:13px}
+.pref-edit{border:1px solid var(--border-strong);background:#fff;border-radius:999px;padding:8px 12px;font-size:10px;font-weight:900;white-space:nowrap}
+.pref-groups{display:grid;grid-template-columns:1fr .85fr 1.15fr;gap:12px;margin-top:14px}
+.pref-group{min-width:0}
+.pref-label{display:block;font-size:8.5px;font-weight:900;letter-spacing:.75px;margin-bottom:7px;color:var(--text-dim)}
+.pref-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pref-chip{border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 9px;font-size:9.5px;font-weight:800;color:var(--text-main)}
+.pref-group.must .pref-chip{background:#edf9f2;border-color:#b8eed2;color:#087a45}
+.pref-group.plus .pref-chip{background:var(--accent-purple-soft);border-color:var(--accent-purple-border);color:var(--accent-purple)}
+.pref-group.no .pref-chip{background:#fff1f1;border-color:#f3c7c7;color:#a63e45;text-decoration:line-through}
+.pref-summary{display:flex;align-items:center;gap:7px;margin-top:13px;padding-top:11px;border-top:1px solid var(--border);font-size:9.5px;color:var(--text-dim)}
+.pref-summary b{color:var(--text-main)}
+.pref-pulse{width:7px;height:7px;border-radius:50%;background:#20a66a;box-shadow:0 0 0 4px rgba(32,166,106,.12)}
+.agent-rule-title{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;font-size:9px;letter-spacing:.7px}
+.agent-rule-title span{font-weight:900;color:var(--text-dim)}
+.agent-rule-title b{color:var(--accent-purple)}
+.agent-filter-board{display:grid;gap:7px}
+.agent-filter-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 10px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:13px}
+.agent-filter-row b{width:62px;font-size:9px;color:var(--text-dim)}
+.agent-filter-row span{font-size:9.5px;font-weight:800;background:#fff;border:1px solid var(--border);border-radius:999px;padding:4px 7px}
+@media(max-width:940px){
+  .hero-preferences{grid-column:auto}
+  .pref-groups{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .hero-preferences{padding:15px}
+  .pref-head{align-items:flex-start}
+  .pref-head strong{font-size:12px}
+  .pref-summary{align-items:flex-start;flex-wrap:wrap}
+}
+</style>
+
+
+<style id="filter-placement-fix">
+.hero-preferences{
+  grid-column:auto!important;
+  width:100%;
+  max-width:1160px;
+  margin:8px auto 34px!important;
+}
+@media(min-width:941px){
+  .hero{
+    grid-template-columns:minmax(0,.92fr) minmax(360px,.78fr)!important;
+    gap:64px!important;
+  }
+}
+</style>
+
+
+<style id="clean-rules-outside-polish">
+/* Keep the swipe card focused on the job; preferences live outside it. */
+.hero-preferences{
+  padding:16px 18px!important;
+  border-radius:20px!important;
+  background:#fff!important;
+}
+.pref-head strong{
+  font-size:12px!important;
+}
+.pref-groups{
+  gap:18px!important;
+}
+.pref-chip{
+  padding:5px 8px!important;
+  font-size:9px!important;
+}
+.pref-summary{
+  margin-top:11px!important;
+}
+/* Preserve a calm, uncluttered card. */
+.swipe-card-body{
+  gap:10px!important;
+}
+.swipe-signal{
+  padding:9px 10px!important;
+}
+</style>
+
+
+<style id="final-card-polish">
+/* Final swipe-card polish: readable, calm, contained. */
+.swipe-stage{
+  width:min(100%, 390px)!important;
+  max-width:390px!important;
+}
+.swipe-stack{
+  height:410px!important;
+}
+.swipe-card-head{
+  padding:18px 19px 4px!important;
+}
+.swipe-card-head small{
+  font-size:11px!important;
+  margin-bottom:7px!important;
+}
+.score-chip{
+  padding:7px 10px!important;
+  font-size:11.5px!important;
+  line-height:1.15!important;
+}
+.score-chip span{
+  font-size:16px!important;
+}
+.company-mark{
+  width:44px!important;
+  height:44px!important;
+  font-size:16px!important;
+}
+.swipe-card-body{
+  padding:7px 19px 14px!important;
+  gap:11px!important;
+}
+.swipe-card-body h3{
+  font-size:29px!important;
+  line-height:1.02!important;
+  letter-spacing:-.9px!important;
+  margin:2px 0 0!important;
+}
+.swipe-card-body>p{
+  font-size:13.5px!important;
+  line-height:1.42!important;
+  margin-bottom:3px!important;
+}
+.swipe-signal{
+  padding:12px 12px!important;
+  border-radius:15px!important;
+  grid-template-columns:27px 1fr!important;
+  gap:9px!important;
+}
+.swipe-signal>span{
+  width:27px!important;
+  height:27px!important;
+  font-size:14px!important;
+}
+.swipe-signal b{
+  font-size:10.5px!important;
+  letter-spacing:.45px!important;
+}
+.swipe-signal p{
+  font-size:12.3px!important;
+  line-height:1.42!important;
+  margin-top:3px!important;
+}
+.swipe-footer{
+  padding:10px 17px!important;
+  font-size:10px!important;
+}
+.swipe-controls{
+  margin-top:17px!important;
+}
+.swipe-circle{
+  width:48px!important;
+  height:48px!important;
+}
+.swipe-circle.save{
+  width:43px!important;
+  height:43px!important;
+}
+.swipe-caption{
+  font-size:10.5px!important;
+}
+@media(max-width:640px){
+  .swipe-stage{
+    width:min(100%, 345px)!important;
+    max-width:345px!important;
+  }
+  .swipe-stack{height:398px!important}
+  .swipe-card-body h3{font-size:26px!important}
+  .swipe-card-body>p{font-size:12.8px!important}
+  .swipe-signal p{font-size:11.6px!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -855,9 +1420,10 @@ body{background:
   <div class="topbar">
     <div class="logo">JobCards<span>.io</span></div>
     <nav class="navlinks" aria-label="Primary navigation">
-      <a href="#why">Your Agent</a>
-      <a href="#why">Your Deck</a>
-      <a href="#power">Your Pipeline</a>
+      <a href="#agent">Your Agent</a>
+      <a href="#deck">Your Deck</a>
+      <a href="#pipeline">Your Pipeline</a>
+      <a href="#insights">Insights</a>
       <button class="btn nav-cta" id="open-waitlist">Get early access</button>
     </nav>
   </div>
@@ -874,104 +1440,288 @@ body{background:
       </div>
     </div>
 
-    <!-- 3-Card Deck Stack -->
-    <div class="deck-wrapper" id="deck-wrapper">
-      <div class="deck-layer layer-3"></div>
-      <div class="deck-layer layer-2"></div>
-
-      <!-- Top Focus Card -->
-      <div class="deck-card" id="active-card">
-        <div class="card-meta">
-          <div class="card-counter">
-            <span id="card-index-label">CARD 1 OF 3 IN YOUR DECK</span>
-            <div class="deck-indicators" id="deck-indicators">
-              <span class="deck-indicator active"></span>
-              <span class="deck-indicator"></span>
-              <span class="deck-indicator"></span>
-            </div>
-          </div>
-          <div class="scan-audit">248 SCANNED → 3 MADE YOUR DECK</div>
-        </div>
-
-        <div>
-          <!-- Worth Your Time Gauge -->
-          <div class="match-score-unit" id="match-unit">
-            <div class="score-radial">
-              <svg viewBox="0 0 36 36">
-                <path class="score-radial-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <path class="score-radial-progress" id="score-circle" stroke-dasharray="96, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-              </svg>
-              <span class="score-radial-num" id="score-num">96%</span>
-            </div>
-            <div class="score-details">
-              <span class="score-details-label">WORTH YOUR TIME</span>
-              <span class="score-details-tag" id="score-text">Worth your time</span>
-            </div>
-          </div>
-
-          <h3 class="card-title" id="card-title">Account Manager</h3>
-          <div class="card-subtitle" id="card-subtitle">Frankfurt / Hybrid · €72k–€88k OTE</div>
-
-          <!-- Key Positive & Warning -->
-          <div class="eval-grid">
-            <div class="eval-box positive">
-              <span class="eval-box-label">✓ GOOD TO KNOW</span>
-              <p class="eval-box-content" id="card-positive">Inbound lead support, realistic B1 German bar, direct VP report line.</p>
-            </div>
-            <div class="eval-box warning">
-              <span class="eval-box-label">⚠ WATCH</span>
-              <p class="eval-box-content" id="card-warning">50% travel required across DACH accounts during quarterly closings.</p>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="action-grid">
-            <button class="action-btn pass" id="btn-pass">PASS</button>
-            <button class="action-btn shortlist" id="btn-shortlist">SHORTLIST</button>
-            <button class="action-btn pursue" id="btn-pursue">PURSUE</button>
-          </div>
-        </div>
+    <!-- Swipe Deck Stack -->
+    
+<div class="swipe-stage" id="swipe-stage" aria-label="Interactive job swipe preview">
+      <div class="swipe-topline">
+        <span>248 screened</span>
+        <b>3 made your Deck</b>
       </div>
+
+      <div class="swipe-stack" id="swipe-stack">
+        <article class="swipe-card back back-3" aria-hidden="true">
+          <div class="ghost-line w45"></div><div class="ghost-line w72"></div><div class="ghost-box"></div>
+        </article>
+        <article class="swipe-card back back-2" aria-hidden="true">
+          <div class="ghost-line w55"></div><div class="ghost-line w68"></div><div class="ghost-box"></div>
+        </article>
+
+        <article class="swipe-card active" id="swipe-card" tabindex="0">
+          <div class="swipe-stamp stamp-pass" id="stamp-pass">PASS</div>
+          <div class="swipe-stamp stamp-like" id="stamp-like">PURSUE</div>
+
+          <div class="swipe-card-head">
+            <div>
+              <small id="swipe-position">1 / 3</small>
+              <div class="score-chip"><span id="swipe-score">96%</span> worth a look</div>
+            </div>
+            <div class="company-mark" id="swipe-mark">AC</div>
+          </div>
+
+          <div class="swipe-card-body">
+            <h3 id="swipe-title">Account Manager</h3>
+            <p id="swipe-meta">Frankfurt · Hybrid · €72k–€88k OTE</p>
+
+            <div class="swipe-signal good">
+              <span>✓</span>
+              <div><b>Strong signal</b><p id="swipe-good">Inbound lead support and realistic B1 German bar.</p></div>
+            </div>
+            <div class="swipe-signal watch">
+              <span>!</span>
+              <div><b>Watch</b><p id="swipe-watch">Travel can reach 50% during quarterly closings.</p></div>
+            </div>
+          </div>
+
+          <div class="swipe-footer">
+            <span>Swipe left to pass</span>
+            <span>Swipe right to pursue</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="swipe-controls" aria-label="Card actions">
+        <button type="button" class="swipe-circle pass" id="swipe-pass" aria-label="Pass this job">✕</button>
+        <button type="button" class="swipe-circle save" id="swipe-save" aria-label="Shortlist this job">★</button>
+        <button type="button" class="swipe-circle pursue" id="swipe-pursue" aria-label="Pursue this job">→</button>
+      </div>
+
+      <div class="swipe-pagination" id="swipe-pagination" aria-label="Deck progress">
+        <button type="button" class="active" data-card="0" aria-label="Show card 1"></button>
+        <button type="button" data-card="1" aria-label="Show card 2"></button>
+        <button type="button" data-card="2" aria-label="Show card 3"></button>
+      </div>
+      <p class="swipe-caption" id="swipe-caption">Try it — drag the card or use the buttons.</p>
     </div>
   </div>
 
   <!-- Unchanged Sections Below Hero -->
-    <section class="seo-summary" aria-label="About JobCards">
-    <p><strong>JobCards is an AI job-search and application-tracking tool for applicants.</strong> It screens job listings, highlights the opportunities worth your time, and helps you manage your shortlist and application pipeline.</p>
-  </section>
-
-  <div id="why" class="section-title">
-    <div class="eyebrow">YOUR SIDE OF HIRING</div>
-    <h2>Your agent. Your deck. Your pipeline.</h2>
-  </div>
-  <div class="grid-3">
-    <div class="feature-card">
-      <div class="num">Your Agent</div>
-      <h3>Finds & screens.</h3>
-      <p>It searches and screens before you spend a minute reading.</p>
+    
+<div class="hero-preferences" aria-label="Your job search preferences">
+  <div class="pref-head">
+    <div>
+      <small>YOUR RULES</small>
+      <strong>The Deck learns what makes a job worth showing you.</strong>
     </div>
-    <div class="feature-card">
-      <div class="num">Your Deck</div>
-      <h3>You decide.</h3>
-      <p>Only the few opportunities worth your time reach you.</p>
-    </div>
-    <div class="feature-card">
-      <div class="num">Your Pipeline</div>
-      <h3>You stay in control.</h3>
-      <p>Shortlist, pursue, apply and track what happens next.</p>
-    </div>
+    <button type="button" class="pref-edit" id="pref-edit">Edit filters</button>
   </div>
 
-  <div class="purple-band" id="power">
-    <div class="eyebrow">THE REVERSE ATS</div>
-    <h2>They screen applicants.<br>You screen opportunities.</h2>
-    <p>Your Agent does the first pass, surfaces the trade-offs, and sends only the roles that deserve your attention.</p>
-    <button class="btn primary" id="open-waitlist-3">Build my Deck →</button>
+  <div class="pref-groups">
+    <div class="pref-group must">
+      <span class="pref-label">MUST HAVE</span>
+      <div class="pref-chips">
+        <button type="button" class="pref-chip active">€70k+</button>
+        <button type="button" class="pref-chip active">Berlin / Remote</button>
+        <button type="button" class="pref-chip active">English</button>
+        <button type="button" class="pref-chip active">B2B</button>
+      </div>
+    </div>
+
+    <div class="pref-group plus">
+      <span class="pref-label">NICE TO HAVE</span>
+      <div class="pref-chips">
+        <button type="button" class="pref-chip">French</button>
+        <button type="button" class="pref-chip">Hybrid</button>
+        <button type="button" class="pref-chip">SaaS</button>
+      </div>
+    </div>
+
+    <div class="pref-group no">
+      <span class="pref-label">NO THANKS</span>
+      <div class="pref-chips">
+        <button type="button" class="pref-chip">SDR / Cold calling</button>
+        <button type="button" class="pref-chip">Internship</button>
+        <button type="button" class="pref-chip">Relocation required</button>
+      </div>
+    </div>
   </div>
 
-  <div class="footer-cta">
-    <div class="eyebrow">YOUR MOVE</div>
-    <h2>Let the jobs come to you.</h2>
+  <div class="pref-summary">
+    <span class="pref-pulse"></span>
+    <b>Agent is using 10 filters</b>
+    <span>to decide what reaches your Deck.</span>
+  </div>
+</div>
+
+<section class="product-intro" aria-label="Product overview">
+  <div class="section-kicker">YOUR SIDE OF HIRING</div>
+  <div class="intro-grid">
+    <h2>One applicant command center.<br>Four jobs it does for you.</h2>
+    <p>JobCards is not another job board. It is the applicant-side operating system that searches, screens, shortlists, and tracks opportunities so you spend your time deciding—not digging.</p>
+  </div>
+  <div class="mini-flow" aria-label="Product flow">
+    <span>SEARCH</span><b>→</b><span>SCREEN</span><b>→</b><span>SHORTLIST</span><b>→</b><span>PIPELINE</span>
+  </div>
+</section>
+
+<section class="feature-showcase" id="agent">
+  <div class="showcase-copy">
+    <div class="section-kicker">01 · YOUR AGENT</div>
+    <h2>It does the searching before you even open the app.</h2>
+    <p>Set the rules once. Your Agent scans on a schedule, checks direct application links, applies include/exclude criteria, and sends only the roles that survive your filters.</p>
+    <ul class="clean-list">
+      <li><span>✓</span> 5 new jobs every 6 hours</li>
+      <li><span>✓</span> Include / exclude rules</li>
+      <li><span>✓</span> Location, language, fit and work-model filters</li>
+      <li><span>✓</span> Direct employer and ATS links preferred</li>
+    </ul>
+    <a class="text-link" href="#deck">See what makes the Deck →</a>
+  </div>
+  <div class="product-panel agent-panel" aria-label="Sourcing agent preview">
+    <div class="panel-topline"><span>AGENT STATUS</span><span class="status-live">● LIVE</span></div>
+    <div class="agent-stat-row">
+      <div><small>LAST RUN</small><strong>12:30</strong></div>
+      <div><small>NEXT RUN</small><strong>18:30</strong></div>
+      <div><small>FOUND</small><strong>5</strong></div>
+    </div>
+    <div class="agent-rule-title">
+      <span>WHAT I WANT</span>
+      <b>10 active rules</b>
+    </div>
+    <div class="agent-filter-board">
+      <div class="agent-filter-row"><b>Role</b><span>Field Marketing</span><span>Account Management</span></div>
+      <div class="agent-filter-row"><b>Where</b><span>Germany</span><span>Europe Remote</span><span>UAE</span></div>
+      <div class="agent-filter-row"><b>Languages</b><span>English</span><span>French</span></div>
+      <div class="agent-filter-row"><b>Minimum</b><span>90% fit</span><span>€70k+</span></div>
+    </div>
+    <div class="rule-box">
+      <b>Include</b>
+      <p>Field marketing, account management, multilingual EMEA roles</p>
+    </div>
+    <div class="rule-box muted">
+      <b>Exclude</b>
+      <p>SDR-heavy, explicit work-authorisation barriers, internships</p>
+    </div>
+    <button class="mock-primary" type="button">Source new jobs now</button>
+  </div>
+</section>
+
+<section class="feature-showcase reverse" id="deck">
+  <div class="product-panel deck-panel" aria-label="Job deck preview">
+    <div class="panel-topline"><span>TODAY'S DECK</span><span>3 OF 5</span></div>
+    <div class="mini-job-card">
+      <div class="score-pill">94% WORTH YOUR TIME</div>
+      <h3>Field Marketing Manager</h3>
+      <p>Berlin · Hybrid · €72k–€88k</p>
+      <div class="signal-grid">
+        <div class="good"><b>✓ Good to know</b><span>Strong EMEA + event fit</span></div>
+        <div class="warn"><b>⚠ Watch</b><span>German preferred</span></div>
+      </div>
+      <div class="mini-actions">
+        <button type="button">PASS</button>
+        <button type="button">SHORTLIST</button>
+        <button type="button" class="hot">PURSUE</button>
+      </div>
+    </div>
+    <div class="deck-progress">248 scanned → 5 made your Deck</div>
+  </div>
+  <div class="showcase-copy">
+    <div class="section-kicker">02 · YOUR DECK</div>
+    <h2>Stop reading everything. Review only what made the cut.</h2>
+    <p>Every card gives you the essentials: fit, upside, warning signs, application effort, and the original source.</p>
+    <ul class="clean-list">
+      <li><span>✓</span> Worth-your-time score</li>
+      <li><span>✓</span> Key positive + warning</li>
+      <li><span>✓</span> Pass / Shortlist / Pursue</li>
+      <li><span>✓</span> Original source always accessible</li>
+    </ul>
+    <a class="text-link" href="#pipeline">Then manage what you pursue →</a>
+  </div>
+</section>
+
+<section class="feature-showcase" id="pipeline">
+  <div class="showcase-copy">
+    <div class="section-kicker">03 · YOUR PIPELINE</div>
+    <h2>Recruiters track candidates. You track companies.</h2>
+    <p>Every opportunity you pursue moves into a simple applicant-side pipeline, with follow-ups, interview stages, and outcomes kept in one place.</p>
+    <ul class="clean-list">
+      <li><span>✓</span> Shortlisted → Applied → Interview → Offer</li>
+      <li><span>✓</span> Rejected and closed tracked separately</li>
+      <li><span>✓</span> Application dates and follow-ups</li>
+      <li><span>✓</span> No lost tabs, notes or spreadsheets</li>
+    </ul>
+    <a class="text-link" href="#insights">See what the data teaches you →</a>
+  </div>
+  <div class="product-panel pipeline-panel" aria-label="Application pipeline preview">
+    <div class="panel-topline"><span>YOUR PIPELINE</span><span>14 ACTIVE</span></div>
+    <div class="pipeline-cols">
+      <div class="pipe-col">
+        <b>SHORTLIST</b>
+        <article><span>92%</span><strong>Marketing Lead</strong><small>Berlin</small></article>
+        <article><span>95%</span><strong>Account Manager</strong><small>Paris</small></article>
+      </div>
+      <div class="pipe-col">
+        <b>APPLIED</b>
+        <article><span>96%</span><strong>Field Marketing</strong><small>Remote EU</small></article>
+      </div>
+      <div class="pipe-col">
+        <b>INTERVIEW</b>
+        <article><span>98%</span><strong>Partnerships</strong><small>Dubai</small></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-showcase reverse" id="insights">
+  <div class="product-panel insights-panel" aria-label="Applicant analytics preview">
+    <div class="panel-topline"><span>YOUR MARKET</span><span>LAST 30 DAYS</span></div>
+    <div class="metric-grid">
+      <div><small>SOURCED</small><strong>84</strong></div>
+      <div><small>SHORTLISTED</small><strong>21</strong></div>
+      <div><small>APPLIED</small><strong>12</strong></div>
+      <div><small>INTERVIEWS</small><strong>4</strong></div>
+    </div>
+    <div class="insight-card">
+      <b>Your strongest lane</b>
+      <strong>Field Marketing · Germany</strong>
+      <p>2.1× higher response rate than your average application.</p>
+    </div>
+    <div class="bar-row"><span>Germany</span><i style="--w:78%"></i><b>78%</b></div>
+    <div class="bar-row"><span>UAE</span><i style="--w:52%"></i><b>52%</b></div>
+    <div class="bar-row"><span>France</span><i style="--w:41%"></i><b>41%</b></div>
+  </div>
+  <div class="showcase-copy">
+    <div class="section-kicker">04 · INSIGHTS</div>
+    <h2>Learn where the market values you most.</h2>
+    <p>Filter your results by location, role family, source, status, date, and fit score to see what is actually working—not just how many applications you sent.</p>
+    <ul class="clean-list">
+      <li><span>✓</span> Applications by market</li>
+      <li><span>✓</span> Conversion by role family</li>
+      <li><span>✓</span> Source performance</li>
+      <li><span>✓</span> Response and interview rates</li>
+    </ul>
+  </div>
+</section>
+
+<section class="how-strip" aria-label="How JobCards works">
+  <div class="section-kicker">HOW IT WORKS</div>
+  <h2>Five minutes a day instead of fifty open tabs.</h2>
+  <div class="how-grid">
+    <div><span>1</span><b>Upload your CV</b><p>Build your profile once.</p></div>
+    <div><span>2</span><b>Set your rules</b><p>Tell your Agent what matters.</p></div>
+    <div><span>3</span><b>Play your Deck</b><p>Pass, shortlist or pursue.</p></div>
+    <div><span>4</span><b>Run your pipeline</b><p>Track the companies chasing your attention.</p></div>
+  </div>
+</section>
+
+<section class="manifesto-band">
+  <div class="section-kicker">THE REVERSE ATS</div>
+  <h2>They screen applicants.<br>You screen opportunities.</h2>
+  <p>JobCards gives applicants their own sourcing, screening, pipeline, and analytics layer—powered by AI, controlled by you.</p>
+  <button class="btn primary" id="open-waitlist-3">Build my Deck →</button>
+</section>
+<div class="footer-cta">
+    <div class="eyebrow">READY WHEN YOU ARE</div>
+    <h2>Stop searching like it’s still 2015.</h2>
     <button class="btn primary" id="open-waitlist-4">Get early access →</button>
   </div>
 
@@ -1102,8 +1852,8 @@ body{background:
     if (autoTimer) clearInterval(autoTimer);
   }
 
-  deckWrapper.addEventListener('mouseenter', () => { isHovered = true; });
-  deckWrapper.addEventListener('mouseleave', () => { isHovered = false; });
+  deckWrapper?.addEventListener('mouseenter', () => { isHovered = true; });
+  deckWrapper?.addEventListener('mouseleave', () => { isHovered = false; });
 
   document.getElementById('btn-pursue')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
   document.getElementById('btn-shortlist')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
@@ -1161,5 +1911,183 @@ Email: ${email}
   });
 })();
 </script>
+
+<script id="swipe-interaction">
+(()=>{
+  const root=document.getElementById('swipe-stage');
+  if(!root||root.dataset.ready)return;
+  root.dataset.ready='1';
+
+  const jobs=[
+    {score:96,mark:'AC',title:'Account Manager',meta:'Frankfurt · Hybrid · €72k–€88k OTE',good:'Inbound lead support and realistic B1 German bar.',watch:'Travel can reach 50% during quarterly closings.'},
+    {score:94,mark:'PM',title:'Senior Product Manager',meta:'Berlin · Remote · €85k–€100k Base',good:'Full squad autonomy and transparent equity formula.',watch:'Rolling pipeline with quarterly intake batches.'},
+    {score:99,mark:'AE',title:'Senior Account Executive',meta:'Berlin · Hybrid · €90k–€120k OTE',good:'Verified pay band and warm book of active accounts.',watch:'No major friction detected. Standard 3-round loop.'}
+  ];
+
+  let idx=0,startX=0,startY=0,dx=0,dragging=false,autoTimer=null,resumeTimer=null,userPaused=false;
+  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const card=root.querySelector('#swipe-card');
+  const title=root.querySelector('#swipe-title');
+  const meta=root.querySelector('#swipe-meta');
+  const good=root.querySelector('#swipe-good');
+  const watch=root.querySelector('#swipe-watch');
+  const score=root.querySelector('#swipe-score');
+  const mark=root.querySelector('#swipe-mark');
+  const pos=root.querySelector('#swipe-position');
+  const passStamp=root.querySelector('#stamp-pass');
+  const likeStamp=root.querySelector('#stamp-like');
+  const caption=root.querySelector('#swipe-caption');
+  const dots=[...root.querySelectorAll('#swipe-pagination button')];
+
+  function render(i){
+    const j=jobs[i];
+    title.textContent=j.title;meta.textContent=j.meta;good.textContent=j.good;watch.textContent=j.watch;
+    score.textContent=j.score+'%';mark.textContent=j.mark;pos.textContent=(i+1)+' / '+jobs.length;
+    dots.forEach((d,n)=>d.classList.toggle('active',n===i));
+    card.style.transform='';card.style.opacity='1';
+  }
+
+  function resetCard(){
+    card.className='swipe-card active';
+    card.style.transform='';card.style.opacity='1';
+    passStamp.style.opacity='0';likeStamp.style.opacity='0';
+  }
+
+  function advance(direction,{automatic=false}={}){
+    if(dragging)return;
+    clearTimeout(autoTimer);
+    card.classList.remove('dragging');
+
+    const cls=direction==='left'?'fly-left':direction==='up'?'fly-up':'fly-right';
+    if(direction==='left') passStamp.style.opacity='1';
+    if(direction==='right') likeStamp.style.opacity='1';
+
+    card.classList.add(cls);
+
+    caption.textContent=automatic
+      ? (direction==='left'?'AI demo: pass → next card':'AI demo: pursue → next card')
+      : (direction==='left'?'Passed. Next card.':direction==='up'?'Shortlisted ★':'Pursue selected. Next card.');
+
+    // Wait until the old card is fully gone before showing the next one.
+    setTimeout(()=>{
+      idx=(idx+1)%jobs.length;
+
+      card.className='swipe-card active enter-next';
+      passStamp.style.opacity='0';
+      likeStamp.style.opacity='0';
+      render(idx);
+
+      // Keep the next card hidden for one frame, then bring it forward.
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          card.classList.add('ready');
+        });
+      });
+
+      setTimeout(()=>{
+        card.classList.remove('enter-next','ready');
+        card.style.transform='';
+        card.style.opacity='1';
+        caption.textContent=automatic
+          ? 'Live demo — automatic swiping.'
+          : 'Manual mode — auto demo resumes shortly.';
+      },420);
+
+      if(!automatic) pauseAutoTemporarily();
+    },560);
+  }
+
+  function scheduleAuto(){
+    clearTimeout(autoTimer);
+    if(reduceMotion||userPaused)return;
+    autoTimer=setTimeout(()=>{
+      const dir=idx===1?'left':'right';
+      advance(dir,{automatic:true});
+      scheduleAuto();
+    },3800);
+  }
+
+  function pauseAutoTemporarily(){
+    userPaused=true;
+    clearTimeout(autoTimer);
+    clearTimeout(resumeTimer);
+    caption.textContent='Manual mode — auto demo resumes shortly.';
+    resumeTimer=setTimeout(()=>{
+      userPaused=false;
+      caption.textContent='Live demo — automatic swiping.';
+      scheduleAuto();
+    },7000);
+  }
+
+  root.querySelector('#swipe-pass').addEventListener('click',()=>{pauseAutoTemporarily();advance('left')});
+  root.querySelector('#swipe-save').addEventListener('click',()=>{pauseAutoTemporarily();advance('up')});
+  root.querySelector('#swipe-pursue').addEventListener('click',()=>{pauseAutoTemporarily();advance('right')});
+  dots.forEach((d,n)=>d.addEventListener('click',()=>{pauseAutoTemporarily();idx=n;resetCard();render(idx)}));
+
+  card.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    pauseAutoTemporarily();
+    dragging=true;startX=e.clientX;startY=e.clientY;dx=0;
+    card.classList.add('dragging');card.setPointerCapture?.(e.pointerId);
+  });
+
+  card.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    dx=e.clientX-startX;
+    const dy=e.clientY-startY;
+    const rot=Math.max(-13,Math.min(13,dx/18));
+    card.style.transform=`translate(${dx}px,${dy*.13}px) rotate(${rot}deg)`;
+    const strength=Math.min(1,Math.abs(dx)/95);
+    if(dx<0){passStamp.style.opacity=String(strength);likeStamp.style.opacity='0'}
+    else{likeStamp.style.opacity=String(strength);passStamp.style.opacity='0'}
+  });
+
+  function release(){
+    if(!dragging)return;
+    dragging=false;card.classList.remove('dragging');
+    if(dx>85)advance('right');
+    else if(dx<-85)advance('left');
+    else{
+      card.style.transform='';passStamp.style.opacity='0';likeStamp.style.opacity='0';
+    }
+  }
+  card.addEventListener('pointerup',release);
+  card.addEventListener('pointercancel',release);
+
+  card.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){pauseAutoTemporarily();advance('left')}
+    if(e.key==='ArrowRight'){pauseAutoTemporarily();advance('right')}
+    if(e.key==='ArrowUp'){pauseAutoTemporarily();advance('up')}
+  });
+
+  root.addEventListener('mouseenter',()=>{
+    if(!reduceMotion){clearTimeout(autoTimer);caption.textContent='Paused while you inspect the card.'}
+  });
+  root.addEventListener('mouseleave',()=>{
+    if(!reduceMotion&&!userPaused){caption.textContent='Live demo — automatic swiping.';scheduleAuto()}
+  });
+
+  render(idx);
+  if(reduceMotion){
+    caption.textContent='Automatic motion is off because reduced motion is enabled.';
+  }else{
+    caption.textContent='Live demo — automatic swiping.';
+    setTimeout(()=>advance('right',{automatic:true}),1700);
+    setTimeout(()=>scheduleAuto(),1800);
+  }
+})();
+</script>
+
+
+<script id="preference-filter-interaction">
+(()=>{
+  document.querySelectorAll('.pref-chip').forEach(chip=>{
+    chip.addEventListener('click',()=>chip.classList.toggle('selected'));
+  });
+  const edit=document.getElementById('pref-edit');
+  if(edit) edit.addEventListener('click',()=>document.getElementById('agent')?.scrollIntoView({behavior:'smooth'}));
+})();
+</script>
+
 </body>
 </html>

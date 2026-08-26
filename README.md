@@ -1,25 +1,14 @@
-# JobCards.io — SEO-ready GitHub Pages package
+# JobCards.io — Final polished version
 
-## Included
-- `index.html` with canonical, meta description, Open Graph, Twitter Card, and Schema.org structured data
-- `robots.txt`
-- `sitemap.xml`
-- `favicon.svg`
-- `apple-touch-icon.png`
-- `og-image.png`
-- `site.webmanifest`
-- `404.html`
-- `CNAME` for `jobcards.io`
+Final card revision:
+- larger, more readable job title and metadata
+- larger signal/warning copy
+- stronger score and company mark
+- card remains contained and phone-like
+- no rules inside the card
+- rules remain in the separate preference panel
+- automatic natural swipe preserved
+- manual swipe/buttons preserved
+- SEO and GitHub Pages files preserved
 
-## Deploy
-Upload all files to the repository root on the `main` branch.
-
-## After deployment
-1. Confirm `https://jobcards.io/robots.txt`
-2. Confirm `https://jobcards.io/sitemap.xml`
-3. Add the domain to Google Search Console.
-4. Submit `https://jobcards.io/sitemap.xml` in Search Console.
-5. Request indexing of the homepage.
-6. Keep GitHub Pages HTTPS enabled once the certificate is ready.
-
-SEO improvements help search engines understand and crawl the site, but they do not guarantee ranking.
+Upload all files to the repository root on `main`.
