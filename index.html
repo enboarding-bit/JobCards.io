@@ -1,0 +1,1077 @@
+<!doctype html>
+<!-- GitHub Pages-ready static site. Waitlist uses mailto:hello@jobcards.io so no backend is required. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobCards.io — The Applicant-Side ATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf8f5;
+  --surface:#ffffff;
+  --surface-subtle:#f4f1ea;
+  --surface-alt:#ece7dc;
+  --border:#e6e1d6;
+  --border-strong:#d2cbbe;
+  --text-main:#141416;
+  --text-muted:#5e5a52;
+  --text-dim:#918b80;
+
+  /* Brand Accents */
+  --accent-lime:#d8fb45;
+  --accent-lime-hover:#c4eb2d;
+  --accent-purple:#673de6;
+  --accent-purple-soft:#f2efff;
+  --accent-purple-border:#dfd7ff;
+
+  /* Score & Match Colors */
+  --score-cyan-text:#00756a;
+  --score-cyan-bg:#e0faf5;
+  --score-cyan-border:#8fe3d4;
+
+  --score-emerald-text:#047857;
+  --score-emerald-bg:#d1fae5;
+  --score-emerald-border:#6ee7b7;
+
+  /* Card Evaluation States */
+  --eval-green-bg:#edf9f2;
+  --eval-green-border:#b8eed2;
+  --eval-green-text:#0a7c42;
+
+  --eval-amber-bg:#fef7ec;
+  --eval-amber-border:#fde3c2;
+  --eval-amber-text:#a35200;
+
+  --shadow-sm:0 2px 8px rgba(20,20,22,.04);
+  --shadow-deck:0 26px 65px -10px rgba(20,20,22,.14), 0 0 1px 1px rgba(20,20,22,.06);
+  
+  --radius-xs:8px;
+  --radius-sm:12px;
+  --radius-md:16px;
+  --radius-lg:26px;
+  --font:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  color:var(--text-main);
+  background:var(--bg);
+  min-height:100vh;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:-.02em;
+}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font:inherit;color:var(--text-main)}
+
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Topbar */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px 0;
+}
+.logo{
+  font-weight:900;
+  font-size:23px;
+  letter-spacing:-1px;
+}
+.logo span{color:var(--accent-purple)}
+.navlinks{
+  display:flex;
+  gap:28px;
+  align-items:center;
+  font-size:14px;
+  font-weight:700;
+}
+.navlinks a{
+  color:var(--text-muted);
+  text-decoration:none;
+  transition:color .2s;
+}
+.navlinks a:hover{color:var(--text-main)}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 24px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:13.5px;
+  border:1.5px solid var(--border-strong);
+  background:var(--surface);
+  transition:all .2s cubic-bezier(.2,.8,.2,1);
+}
+.btn:hover{
+  background:var(--surface-subtle);
+  transform:translateY(-1.5px);
+  box-shadow:var(--shadow-sm);
+}
+.btn.primary{
+  background:var(--accent-lime);
+  border-color:transparent;
+  color:#0f1203;
+  box-shadow:0 4px 18px rgba(216,251,69,.45);
+}
+.btn.primary:hover{
+  background:var(--accent-lime-hover);
+  box-shadow:0 6px 22px rgba(216,251,69,.6);
+}
+
+/* Simplified Hero Section */
+.hero{
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:60px;
+  align-items:center;
+  padding:50px 0 80px;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.8px;
+  text-transform:uppercase;
+  color:var(--accent-purple);
+  margin-bottom:14px;
+}
+.eyebrow::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent-purple);
+}
+h1{
+  font-size:clamp(40px,5.2vw,68px);
+  line-height:1.02;
+  font-weight:900;
+  letter-spacing:-2.5px;
+}
+.lead{
+  font-size:19px;
+  color:var(--text-muted);
+  line-height:1.6;
+  margin:22px 0 28px;
+  max-width:500px;
+}
+.cta-row{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+/* 3-Card Deck Stack Visual */
+.deck-wrapper{
+  position:relative;
+  padding:16px 10px 0;
+  perspective:1200px;
+}
+.deck-layer{
+  position:absolute;
+  left:18px;
+  right:18px;
+  height:100%;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);
+  pointer-events:none;
+  transition:all .35s ease;
+}
+.layer-3{top:-4px;transform:scale(0.93) rotate(-2.5deg);opacity:.65;background:#f5f1e8}
+.layer-2{top:8px;transform:scale(0.97) rotate(1.8deg);opacity:.9;background:#fbf9f4}
+
+/* Simplified Card */
+.deck-card{
+  position:relative;
+  background:var(--surface);
+  border:1.5px solid var(--border-strong);
+  border-radius:var(--radius-lg);
+  padding:26px 28px;
+  box-shadow:var(--shadow-deck);
+  z-index:10;
+  transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease;
+}
+.deck-card.anim-swipe-right{
+  transform:translateX(110%) rotate(8deg) scale(0.96);
+  opacity:0;
+}
+.deck-card.anim-swipe-left{
+  transform:translateX(-110%) rotate(-8deg) scale(0.96);
+  opacity:0;
+}
+.deck-card.anim-enter{
+  transform:translateY(18px) scale(0.98);
+  opacity:0;
+}
+
+.card-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  padding-bottom:14px;
+  margin-bottom:16px;
+}
+.card-counter{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:11.5px;
+  font-weight:800;
+  letter-spacing:.8px;
+  color:var(--accent-purple);
+  text-transform:uppercase;
+}
+.deck-indicators{
+  display:flex;
+  gap:5px;
+}
+.deck-indicator{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--border-strong);
+  transition:all .3s ease;
+}
+.deck-indicator.active{
+  background:var(--accent-purple);
+  width:20px;
+  border-radius:999px;
+}
+.scan-audit{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.6px;
+  color:var(--text-dim);
+  text-transform:uppercase;
+}
+
+/* Worth Your Time Gauge */
+.match-score-unit{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:6px 14px 6px 6px;
+  background:var(--score-cyan-bg);
+  border:1.5px solid var(--score-cyan-border);
+  border-radius:999px;
+  width:fit-content;
+  margin-bottom:8px;
+  transition:all .3s ease;
+}
+.match-score-unit.ultra{
+  background:var(--score-emerald-bg);
+  border-color:var(--score-emerald-border);
+  box-shadow:0 0 16px rgba(110,231,183,.4);
+}
+
+.score-radial{
+  position:relative;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.score-radial svg{
+  width:42px;
+  height:42px;
+  transform:rotate(-90deg);
+}
+.score-radial-bg{
+  fill:none;
+  stroke:rgba(0,0,0,.08);
+  stroke-width:3.5;
+}
+.score-radial-progress{
+  fill:none;
+  stroke:var(--score-cyan-text);
+  stroke-width:3.5;
+  stroke-linecap:round;
+  stroke-dasharray:100;
+  stroke-dashoffset:4;
+  transition:stroke-dashoffset .4s ease, stroke .3s ease;
+}
+.match-score-unit.ultra .score-radial-progress{
+  stroke:var(--score-emerald-text);
+}
+.score-radial-num{
+  position:absolute;
+  font-size:12.5px;
+  font-weight:900;
+  letter-spacing:-.5px;
+  color:var(--score-cyan-text);
+}
+.match-score-unit.ultra .score-radial-num{
+  color:var(--score-emerald-text);
+}
+
+.score-details{
+  display:flex;
+  flex-direction:column;
+}
+.score-details-label{
+  font-size:9.5px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  color:var(--score-cyan-text);
+  opacity:.85;
+}
+.match-score-unit.ultra .score-details-label{
+  color:var(--score-emerald-text);
+}
+.score-details-tag{
+  font-size:12.5px;
+  font-weight:800;
+  color:var(--score-cyan-text);
+  line-height:1.2;
+}
+.match-score-unit.ultra .score-details-tag{
+  color:var(--score-emerald-text);
+}
+
+.card-title{
+  font-size:clamp(22px,2.6vw,28px);
+  font-weight:900;
+  letter-spacing:-1px;
+  margin:10px 0 2px;
+  color:var(--text-main);
+}
+.card-subtitle{
+  font-size:14px;
+  color:var(--text-muted);
+  font-weight:600;
+}
+
+/* Simplified 2-Box Evaluation Grid */
+.eval-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:18px 0 20px;
+}
+.eval-box{
+  border-radius:var(--radius-sm);
+  padding:14px 15px;
+  min-height:84px;
+}
+.eval-box.positive{
+  background:var(--eval-green-bg);
+  border:1px solid var(--eval-green-border);
+}
+.eval-box.warning{
+  background:var(--eval-amber-bg);
+  border:1px solid var(--eval-amber-border);
+}
+.eval-box-label{
+  display:block;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  font-weight:800;
+  margin-bottom:4px;
+}
+.eval-box.positive .eval-box-label{color:var(--eval-green-text)}
+.eval-box.warning .eval-box-label{color:var(--eval-amber-text)}
+.eval-box-content{
+  font-size:12px;
+  line-height:1.45;
+  color:var(--text-main);
+  font-weight:600;
+}
+
+/* Action Buttons: PASS / SHORTLIST / PURSUE */
+.action-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1.35fr;
+  gap:10px;
+}
+.action-btn{
+  text-align:center;
+  border:1.5px solid var(--border-strong);
+  border-radius:999px;
+  padding:12px 10px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.7px;
+  background:var(--surface-subtle);
+  transition:all .18s cubic-bezier(.2,.8,.2,1);
+}
+.action-btn:hover{
+  background:var(--surface-alt);
+  transform:translateY(-1.5px);
+}
+.action-btn.pursue{
+  background:var(--accent-lime);
+  border-color:transparent;
+  color:#101302;
+  box-shadow:0 4px 14px rgba(216,251,69,.45);
+}
+.action-btn.pursue:hover{
+  background:var(--accent-lime-hover);
+  box-shadow:0 6px 20px rgba(216,251,69,.65);
+}
+
+/* Sections Below Hero */
+.section-title{
+  margin:100px 0 36px;
+}
+.section-title h2{
+  font-size:clamp(34px,4.5vw,54px);
+  font-weight:900;
+  letter-spacing:-1.8px;
+  line-height:1.02;
+}
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.feature-card{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:32px 28px;
+  box-shadow:var(--shadow-sm);
+}
+.feature-card .num{
+  font-size:36px;
+  font-weight:900;
+  letter-spacing:-1.5px;
+  color:var(--accent-purple);
+  line-height:1;
+}
+.feature-card h3{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.5px;
+  margin:18px 0 10px;
+}
+.feature-card p{
+  color:var(--text-muted);
+  font-size:14.5px;
+  line-height:1.6;
+  font-weight:500;
+}
+
+.purple-band{
+  background:var(--accent-purple-soft);
+  border:1.5px solid var(--accent-purple-border);
+  border-radius:var(--radius-lg);
+  padding:70px 40px;
+  margin:100px 0;
+  text-align:center;
+}
+.purple-band h2{
+  font-size:clamp(32px,4vw,52px);
+  font-weight:900;
+  letter-spacing:-1.5px;
+  line-height:1.05;
+  margin-bottom:18px;
+}
+.purple-band p{
+  color:var(--text-muted);
+  font-size:17.5px;
+  max-width:620px;
+  margin:0 auto 32px;
+  line-height:1.6;
+  font-weight:500;
+}
+
+.footer-cta{
+  text-align:center;
+  padding:80px 0 30px;
+}
+.footer-cta h2{
+  font-size:clamp(36px,5vw,58px);
+  font-weight:900;
+  letter-spacing:-1.8px;
+  margin-bottom:24px;
+}
+.contact-email{
+  text-align:center;
+  padding:0 0 60px;
+  font-size:14px;
+  color:var(--text-muted);
+  font-weight:600;
+}
+.contact-email a{
+  color:var(--accent-purple);
+  font-weight:800;
+  text-decoration:none;
+}
+
+/* Modal */
+#waitlist-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(20,20,22,.55);
+  backdrop-filter:blur(6px);
+  z-index:9999;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+#waitlist-modal.open{display:flex}
+.modal-content{
+  width:min(460px,100%);
+  background:var(--surface);
+  border:1.5px solid var(--border-strong);
+  border-radius:var(--radius-lg);
+  padding:34px;
+  box-shadow:var(--shadow-deck);
+}
+.modal-content label{
+  display:block;
+  font-size:11.5px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin:18px 0 6px;
+  color:var(--text-muted);
+}
+.modal-content input{
+  width:100%;
+  padding:14px 16px;
+  border:1.5px solid var(--border-strong);
+  border-radius:var(--radius-sm);
+  background:var(--surface);
+  font-size:15px;
+  font-weight:600;
+}
+.modal-content input:focus{
+  outline:none;
+  border-color:var(--accent-purple);
+}
+.modal-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.close{
+  font-size:26px;
+  line-height:1;
+  color:var(--text-dim);
+}
+.close:hover{color:var(--text-main)}
+.full{
+  width:100%;
+  margin-top:22px;
+}
+#waitlist-msg{
+  font-size:13px;
+  font-weight:700;
+  margin-top:14px;
+  text-align:center;
+  color:var(--text-muted);
+}
+
+@media(max-width:940px){
+  .hero{grid-template-columns:1fr;gap:40px}
+  .grid-3{grid-template-columns:1fr}
+  .eval-grid{grid-template-columns:1fr}
+  .navlinks a{display:none}
+}
+</style>
+
+<style id="ux-polish">
+:root{
+  --focus-ring:0 0 0 4px rgba(103,61,230,.16);
+}
+body{background:
+  radial-gradient(circle at 78% 10%, rgba(216,251,69,.10), transparent 26rem),
+  var(--bg);
+}
+.container{max-width:1160px}
+.topbar{
+  padding:20px 0;
+  border-bottom:1px solid rgba(210,203,190,.55);
+}
+.logo{font-size:22px}
+.navlinks{gap:22px}
+.navlinks a{font-size:13px}
+.nav-cta{padding:10px 17px;background:transparent}
+.btn:focus-visible,.action-btn:focus-visible,.close:focus-visible,input:focus-visible{
+  outline:none;box-shadow:var(--focus-ring);
+}
+.hero{
+  grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr);
+  gap:72px;
+  min-height:540px;
+  padding:58px 0 72px;
+}
+.hero h1{max-width:530px}
+.lead{
+  font-size:18px;
+  margin:18px 0 24px;
+  color:#4f4b45;
+}
+.cta-row{align-items:center}
+.hero-cta{min-height:50px;padding-inline:25px}
+.hero-proof{
+  font-size:12.5px;
+  color:var(--text-dim);
+  font-weight:700;
+}
+.deck-wrapper{padding:12px 10px 6px}
+.deck-card{
+  padding:24px 26px 22px;
+  box-shadow:0 24px 58px -18px rgba(20,20,22,.18),0 0 0 1px rgba(20,20,22,.03);
+}
+.layer-3{top:-2px;transform:scale(.945) rotate(-1.8deg);opacity:.58}
+.layer-2{top:9px;transform:scale(.975) rotate(1deg);opacity:.9}
+.card-meta{
+  align-items:flex-start;
+  gap:16px;
+  padding-bottom:12px;
+  margin-bottom:16px;
+}
+.card-counter{font-size:10.5px;letter-spacing:.65px}
+.scan-audit{
+  color:#59544c;
+  background:var(--surface-subtle);
+  border:1px solid var(--border);
+  padding:5px 8px;
+  border-radius:999px;
+  letter-spacing:.35px;
+  white-space:nowrap;
+}
+.match-score-unit{
+  padding:5px 12px 5px 5px;
+  gap:10px;
+  margin-bottom:10px;
+}
+.score-radial,.score-radial svg{width:38px;height:38px}
+.score-details-label{font-size:9px}
+.score-details-tag{font-size:12px}
+.card-title{font-size:27px;margin-top:11px}
+.card-subtitle{font-size:13.5px}
+.eval-grid{gap:10px;margin:17px 0 18px}
+.eval-box{
+  min-height:78px;
+  padding:12px 13px;
+  border-width:1px!important;
+}
+.eval-box-label{font-size:9.5px}
+.eval-box-content{font-size:11.8px;line-height:1.4}
+.action-grid{grid-template-columns:.9fr 1.05fr 1.25fr;gap:9px}
+.action-btn{
+  min-height:44px;
+  padding:11px 10px;
+  background:white;
+}
+.action-btn.pass{color:var(--text-dim)}
+.action-btn.shortlist{
+  color:var(--accent-purple);
+  border-color:var(--accent-purple-border);
+  background:var(--accent-purple-soft);
+}
+.action-btn.shortlist:hover{background:#eae4ff}
+.action-btn.pursue{min-height:46px}
+.section-title{
+  margin:86px 0 28px;
+  max-width:760px;
+}
+.section-title h2{font-size:clamp(34px,4vw,48px)}
+.grid-3{gap:16px}
+.feature-card{
+  padding:25px 23px;
+  border-radius:22px;
+  box-shadow:none;
+}
+.feature-card .num{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:var(--accent-purple-soft);
+  border:1px solid var(--accent-purple-border);
+  font-size:12px;
+  letter-spacing:0;
+}
+.feature-card h3{margin:15px 0 7px;font-size:18px}
+.feature-card p{font-size:13.5px;line-height:1.5}
+.purple-band{
+  margin:82px 0 74px;
+  padding:54px 34px;
+  border-radius:28px;
+}
+.purple-band h2{font-size:clamp(32px,4vw,46px)}
+.purple-band p{
+  max-width:570px;
+  margin:0 auto 25px;
+  font-size:15.5px;
+}
+.footer-cta{padding:58px 0 26px}
+.footer-cta h2{font-size:clamp(34px,4.5vw,50px);margin-bottom:20px}
+.contact-email{padding-bottom:42px}
+.modal-content{padding:28px;border-radius:22px}
+.modal-content input{min-height:48px}
+.close{
+  width:42px;height:42px;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.close:hover{background:var(--surface-subtle)}
+@media(max-width:940px){
+  .hero{
+    grid-template-columns:1fr;
+    min-height:auto;
+    gap:42px;
+    padding:42px 0 64px;
+  }
+  .hero h1{max-width:680px}
+  .deck-wrapper{max-width:640px;width:100%;margin:0 auto}
+}
+@media(max-width:640px){
+  .container{padding:0 16px}
+  .topbar{padding:16px 0}
+  .navlinks{gap:10px}
+  .navlinks a{display:none}
+  .nav-cta{font-size:12px;padding:9px 12px}
+  .hero{padding-top:34px}
+  h1{font-size:clamp(39px,12vw,54px);letter-spacing:-2px}
+  .lead{font-size:16.5px}
+  .cta-row{display:grid;grid-template-columns:1fr}
+  .hero-cta{width:100%}
+  .hero-proof{text-align:center}
+  .deck-card{padding:19px 17px 17px;border-radius:22px}
+  .card-meta{display:block}
+  .scan-audit{display:inline-flex;margin-top:9px;white-space:normal}
+  .eval-grid{grid-template-columns:1fr}
+  .action-grid{grid-template-columns:1fr 1fr}
+  .action-btn.pursue{grid-column:1/-1}
+  .section-title{margin-top:68px}
+  .purple-band{padding:42px 20px;margin:68px 0 58px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="logo">JobCards<span>.io</span></div>
+    <div class="navlinks">
+      <a href="#why">Your Agent</a>
+      <a href="#why">Your Deck</a>
+      <a href="#power">Your Pipeline</a>
+      <button class="btn nav-cta" id="open-waitlist">Get early access</button>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div>
+      <h1>They have an ATS.<br>You have JobCards.</h1>
+      <p class="lead">AI screens the jobs. You make the call.</p>
+      <div class="cta-row">
+        <button class="btn primary hero-cta" id="open-waitlist-2">Build my Deck <span aria-hidden="true">→</span></button>
+        <span class="hero-proof">No 50 tabs. No endless scrolling.</span>
+      </div>
+    </div>
+
+    <!-- 3-Card Deck Stack -->
+    <div class="deck-wrapper" id="deck-wrapper">
+      <div class="deck-layer layer-3"></div>
+      <div class="deck-layer layer-2"></div>
+
+      <!-- Top Focus Card -->
+      <div class="deck-card" id="active-card">
+        <div class="card-meta">
+          <div class="card-counter">
+            <span id="card-index-label">CARD 1 OF 3 IN YOUR DECK</span>
+            <div class="deck-indicators" id="deck-indicators">
+              <span class="deck-indicator active"></span>
+              <span class="deck-indicator"></span>
+              <span class="deck-indicator"></span>
+            </div>
+          </div>
+          <div class="scan-audit">248 SCANNED → 3 MADE YOUR DECK</div>
+        </div>
+
+        <div>
+          <!-- Worth Your Time Gauge -->
+          <div class="match-score-unit" id="match-unit">
+            <div class="score-radial">
+              <svg viewBox="0 0 36 36">
+                <path class="score-radial-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <path class="score-radial-progress" id="score-circle" stroke-dasharray="96, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              </svg>
+              <span class="score-radial-num" id="score-num">96%</span>
+            </div>
+            <div class="score-details">
+              <span class="score-details-label">WORTH YOUR TIME</span>
+              <span class="score-details-tag" id="score-text">Worth your time</span>
+            </div>
+          </div>
+
+          <h3 class="card-title" id="card-title">Account Manager</h3>
+          <div class="card-subtitle" id="card-subtitle">Frankfurt / Hybrid · €72k–€88k OTE</div>
+
+          <!-- Key Positive & Warning -->
+          <div class="eval-grid">
+            <div class="eval-box positive">
+              <span class="eval-box-label">✓ GOOD TO KNOW</span>
+              <p class="eval-box-content" id="card-positive">Inbound lead support, realistic B1 German bar, direct VP report line.</p>
+            </div>
+            <div class="eval-box warning">
+              <span class="eval-box-label">⚠ WATCH</span>
+              <p class="eval-box-content" id="card-warning">50% travel required across DACH accounts during quarterly closings.</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="action-grid">
+            <button class="action-btn pass" id="btn-pass">PASS</button>
+            <button class="action-btn shortlist" id="btn-shortlist">SHORTLIST</button>
+            <button class="action-btn pursue" id="btn-pursue">PURSUE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unchanged Sections Below Hero -->
+  <div id="why" class="section-title">
+    <div class="eyebrow">YOUR SIDE OF HIRING</div>
+    <h2>Your agent. Your deck. Your pipeline.</h2>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="num">Your Agent</div>
+      <h3>Finds & screens.</h3>
+      <p>It searches and screens before you spend a minute reading.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">Your Deck</div>
+      <h3>You decide.</h3>
+      <p>Only the few opportunities worth your time reach you.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">Your Pipeline</div>
+      <h3>You stay in control.</h3>
+      <p>Shortlist, pursue, apply and track what happens next.</p>
+    </div>
+  </div>
+
+  <div class="purple-band" id="power">
+    <div class="eyebrow">THE REVERSE ATS</div>
+    <h2>They screen applicants.<br>You screen opportunities.</h2>
+    <p>Your Agent does the first pass, surfaces the trade-offs, and sends only the roles that deserve your attention.</p>
+    <button class="btn primary" id="open-waitlist-3">Build my Deck →</button>
+  </div>
+
+  <div class="footer-cta">
+    <div class="eyebrow">YOUR MOVE</div>
+    <h2>Let the jobs come to you.</h2>
+    <button class="btn primary" id="open-waitlist-4">Get early access →</button>
+  </div>
+
+  <div class="contact-email">
+    Questions? Contact us at <a href="mailto:hello@jobcards.io">hello@jobcards.io</a>
+  </div>
+</div>
+
+<!-- Waitlist Modal -->
+<div id="waitlist-modal">
+  <div class="modal-content">
+    <div class="modal-row">
+      <div>
+        <div class="eyebrow">JOIN WAITLIST</div>
+        <h2 style="font-size:26px;font-weight:900;letter-spacing:-1px;margin:4px 0;color:var(--text-main)">Build your first Deck.</h2>
+        <p style="font-size:13px;color:var(--text-muted);font-weight:500">Enter your details and we’ll prepare an early-access email for you.</p>
+      </div>
+      <button class="close" id="close-waitlist">×</button>
+    </div>
+    <form id="waitlist-form" action="#" method="POST">
+      <label for="waitlist-name">First name</label>
+      <input id="waitlist-name" name="name" autocomplete="given-name" placeholder="Alex" required>
+      <label for="waitlist-email">Email</label>
+      <input id="waitlist-email" name="email" type="email" autocomplete="email" placeholder="alex@domain.com" required>
+      <button class="btn primary full" type="submit">Join waitlist →</button>
+    </form>
+    <div id="waitlist-msg"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // 3 Curated Deck Cards
+  const deckData = [
+    {
+      title: "Account Manager",
+      subtitle: "Frankfurt / Hybrid · €72k–€88k OTE",
+      percentage: 96,
+      isUltraFit: false,
+      positive: "Inbound lead support, realistic B1 German bar, direct VP report line.",
+      warning: "50% travel required across DACH accounts during quarterly closings."
+    },
+    {
+      title: "Senior Product Manager",
+      subtitle: "Berlin / Remote · €85k–€100k Base",
+      percentage: 94,
+      isUltraFit: false,
+      positive: "Complete squad autonomy, async culture, published transparent equity formula.",
+      warning: "Rolling talent pipeline with scheduled quarterly intake batches."
+    },
+    {
+      title: "Senior Account Executive",
+      subtitle: "Berlin / Hybrid · €90k–€120k OTE",
+      percentage: 99,
+      isUltraFit: true,
+      positive: "Verified pay bracket, replacement for promoted rep, warm book of 45 accounts.",
+      warning: "None detected. Zero travel required and 3-round standard loop."
+    }
+  ];
+
+  let currentIndex = 0;
+  let autoTimer = null;
+  let isHovered = false;
+
+  const deckWrapper = document.getElementById('deck-wrapper');
+  const card = document.getElementById('active-card');
+  const indexLabel = document.getElementById('card-index-label');
+  const matchUnit = document.getElementById('match-unit');
+  const scoreNum = document.getElementById('score-num');
+  const scoreText = document.getElementById('score-text');
+  const scoreCircle = document.getElementById('score-circle');
+  const title = document.getElementById('card-title');
+  const subtitle = document.getElementById('card-subtitle');
+  const positive = document.getElementById('card-positive');
+  const warning = document.getElementById('card-warning');
+  const indicatorsBox = document.getElementById('deck-indicators');
+
+  function renderCard(idx) {
+    const data = deckData[idx];
+    indexLabel.textContent = `CARD ${idx + 1} OF ${deckData.length} IN YOUR DECK`;
+    
+    scoreNum.textContent = `${data.percentage}%`;
+    if(scoreText) scoreText.textContent = data.isUltraFit ? 'Excellent fit' : 'Worth your time';
+    scoreCircle.setAttribute('stroke-dasharray', `${data.percentage}, 100`);
+
+    if (data.isUltraFit) {
+      matchUnit.className = 'match-score-unit ultra';
+    } else {
+      matchUnit.className = 'match-score-unit';
+    }
+
+    title.textContent = data.title;
+    subtitle.textContent = data.subtitle;
+    positive.textContent = data.positive;
+    warning.textContent = data.warning;
+
+    const dots = indicatorsBox.querySelectorAll('.deck-indicator');
+    dots.forEach((dot, dIdx) => {
+      if (dIdx === idx) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  function advanceCard(animClass) {
+    card.classList.add(animClass);
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % deckData.length;
+      renderCard(currentIndex);
+      card.classList.remove(animClass);
+      card.classList.add('anim-enter');
+      setTimeout(() => card.classList.remove('anim-enter'), 40);
+    }, 240);
+  }
+
+  function startCycle() {
+    stopCycle();
+    autoTimer = setInterval(() => {
+      if (!isHovered) advanceCard('anim-swipe-right');
+    }, 4500);
+  }
+
+  function stopCycle() {
+    if (autoTimer) clearInterval(autoTimer);
+  }
+
+  deckWrapper.addEventListener('mouseenter', () => { isHovered = true; });
+  deckWrapper.addEventListener('mouseleave', () => { isHovered = false; });
+
+  document.getElementById('btn-pursue')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
+  document.getElementById('btn-shortlist')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
+  document.getElementById('btn-pass')?.addEventListener('click', () => advanceCard('anim-swipe-left'));
+
+  // Keep the preview stable until the visitor makes a choice.
+
+  // Waitlist Modal
+  const modal = document.getElementById('waitlist-modal');
+  const openButtons = ['open-waitlist','open-waitlist-2','open-waitlist-3','open-waitlist-4'];
+  openButtons.forEach(id => {
+    document.getElementById(id)?.addEventListener('click', () => {
+      modal.classList.add('open');
+      document.getElementById('waitlist-name').focus();
+    });
+  });
+  document.getElementById('close-waitlist')?.addEventListener('click', () => modal.classList.remove('open'));
+  modal?.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('open'); });
+
+  const form = document.getElementById('waitlist-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('waitlist-msg');
+    const name = document.getElementById('waitlist-name')?.value.trim() || '';
+    const email = document.getElementById('waitlist-email')?.value.trim() || '';
+
+    if (!email || !email.includes('@')) {
+      msg.textContent = 'Please enter a valid email.';
+      return;
+    }
+
+    const subject = encodeURIComponent('JobCards early access');
+    const body = encodeURIComponent(
+      `Hi JobCards team,
+
+I’d like early access.
+
+Name: ${name}
+Email: ${email}
+`
+    );
+
+    msg.textContent = 'Opening your email app…';
+    window.location.href = `mailto:hello@jobcards.io?subject=${subject}&body=${body}`;
+  });
+      if (res.ok) {
+        msg.textContent = '✅ You’re on the early-access list. We’ll be in touch.';
+        form.reset();
+      } else {
+        msg.textContent = 'Something went wrong. Please try again.';
+      }
+    } catch (err) {
+      msg.textContent = 'Network error. Please try again later.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
