@@ -1,18 +1,25 @@
-# JobCards.io landing page
+# JobCards.io — SEO-ready GitHub Pages package
 
-GitHub Pages-ready static site.
+## Included
+- `index.html` with canonical, meta description, Open Graph, Twitter Card, and Schema.org structured data
+- `robots.txt`
+- `sitemap.xml`
+- `favicon.svg`
+- `apple-touch-icon.png`
+- `og-image.png`
+- `site.webmanifest`
+- `404.html`
+- `CNAME` for `jobcards.io`
 
 ## Deploy
-1. Create a new GitHub repository.
-2. Upload `index.html`.
-3. Go to **Settings → Pages**.
-4. Choose **Deploy from a branch**.
-5. Select `main` and `/ (root)`.
-6. Save.
+Upload all files to the repository root on the `main` branch.
 
-## Waitlist
-The early-access form works without a backend by opening the visitor's email client with a prefilled message to:
+## After deployment
+1. Confirm `https://jobcards.io/robots.txt`
+2. Confirm `https://jobcards.io/sitemap.xml`
+3. Add the domain to Google Search Console.
+4. Submit `https://jobcards.io/sitemap.xml` in Search Console.
+5. Request indexing of the homepage.
+6. Keep GitHub Pages HTTPS enabled once the certificate is ready.
 
-`hello@jobcards.io`
-
-If you later want automatic form collection without opening email, connect Formspree, Basin, Formspark, or your own backend.
+SEO improvements help search engines understand and crawl the site, but they do not guarantee ranking.

@@ -4,7 +4,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JobCards.io — The Applicant-Side ATS</title>
+<meta name="description" content="JobCards is the applicant-side ATS. AI screens job listings, filters the noise, and gives you a curated deck of opportunities worth your time.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="https://jobcards.io/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JobCards">
+<meta property="og:title" content="JobCards.io — The Applicant-Side ATS">
+<meta property="og:description" content="They have an ATS. You have JobCards. AI screens the jobs. You make the call.">
+<meta property="og:url" content="https://jobcards.io/">
+<meta property="og:image" content="https://jobcards.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JobCards — The applicant-side ATS">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JobCards.io — The Applicant-Side ATS">
+<meta name="twitter:description" content="AI screens the jobs. You make the call.">
+<meta name="twitter:image" content="https://jobcards.io/og-image.png">
+
+<meta name="theme-color" content="#faf8f5">
+<meta name="application-name" content="JobCards">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<title>JobCards.io — AI Job Search & Applicant-Side ATS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -766,6 +791,62 @@ body{background:
 }
 </style>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://jobcards.io/#organization",
+      "name": "JobCards",
+      "url": "https://jobcards.io/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jobcards.io/og-image.png"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://jobcards.io/#website",
+      "url": "https://jobcards.io/",
+      "name": "JobCards",
+      "publisher": {
+        "@id": "https://jobcards.io/#organization"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://jobcards.io/#app",
+      "name": "JobCards",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://jobcards.io/",
+      "description": "An applicant-side ATS that uses AI to screen job listings, filter opportunities, and help applicants shortlist and track roles worth pursuing.",
+      "publisher": {
+        "@id": "https://jobcards.io/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/PreOrder"
+      }
+    }
+  ]
+}
+</script>
+<style id="seo-support-style">
+.seo-summary{
+  max-width:760px;
+  margin:18px 0 0;
+  color:var(--text-muted);
+  font-size:14px;
+  line-height:1.65;
+}
+.seo-summary strong{color:var(--text-main)}
+</style>
+
 </head>
 <body>
 
@@ -773,15 +854,16 @@ body{background:
   <!-- Topbar -->
   <div class="topbar">
     <div class="logo">JobCards<span>.io</span></div>
-    <div class="navlinks">
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="#why">Your Agent</a>
       <a href="#why">Your Deck</a>
       <a href="#power">Your Pipeline</a>
       <button class="btn nav-cta" id="open-waitlist">Get early access</button>
-    </div>
+    </nav>
   </div>
 
   <!-- Hero Section -->
+  <main>
   <div class="hero">
     <div>
       <h1>They have an ATS.<br>You have JobCards.</h1>
@@ -854,6 +936,10 @@ body{background:
   </div>
 
   <!-- Unchanged Sections Below Hero -->
+    <section class="seo-summary" aria-label="About JobCards">
+    <p><strong>JobCards is an AI job-search and application-tracking tool for applicants.</strong> It screens job listings, highlights the opportunities worth your time, and helps you manage your shortlist and application pipeline.</p>
+  </section>
+
   <div id="why" class="section-title">
     <div class="eyebrow">YOUR SIDE OF HIRING</div>
     <h2>Your agent. Your deck. Your pipeline.</h2>
@@ -889,8 +975,10 @@ body{background:
     <button class="btn primary" id="open-waitlist-4">Get early access →</button>
   </div>
 
+  </main>
+
   <div class="contact-email">
-    Questions? Contact us at <a href="mailto:hello@jobcards.io">hello@jobcards.io</a>
+    Questions? Contact us at <a href="mailto:hello@jobcards.io" rel="nofollow">hello@jobcards.io</a>
   </div>
 </div>
 
