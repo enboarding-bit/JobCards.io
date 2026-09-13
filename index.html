@@ -553,6 +553,7 @@ h1{
   justify-content:center;
 }
 #waitlist-modal.open{display:flex}
+body.modal-open{overflow:hidden}
 .modal-content{
   width:min(460px,100%);
   background:var(--surface);
@@ -1733,15 +1734,15 @@ body{background:
 </div>
 
 <!-- Waitlist Modal -->
-<div id="waitlist-modal">
-  <div class="modal-content">
+<div id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="waitlist-title" aria-describedby="waitlist-description" aria-hidden="true">
+  <div class="modal-content" tabindex="-1">
     <div class="modal-row">
       <div>
         <div class="eyebrow">JOIN WAITLIST</div>
-        <h2 style="font-size:26px;font-weight:900;letter-spacing:-1px;margin:4px 0;color:var(--text-main)">Build your first Deck.</h2>
-        <p style="font-size:13px;color:var(--text-muted);font-weight:500">Enter your details and we’ll prepare an early-access email for you.</p>
+        <h2 id="waitlist-title" style="font-size:26px;font-weight:900;letter-spacing:-1px;margin:4px 0;color:var(--text-main)">Build your first Deck.</h2>
+        <p id="waitlist-description" style="font-size:13px;color:var(--text-muted);font-weight:500">Enter your details and we’ll prepare an early-access email for you.</p>
       </div>
-      <button class="close" id="close-waitlist">×</button>
+      <button class="close" id="close-waitlist" type="button" aria-label="Close early-access form">×</button>
     </div>
     <form id="waitlist-form" action="#" method="POST">
       <label for="waitlist-name">First name</label>
@@ -1750,164 +1751,85 @@ body{background:
       <input id="waitlist-email" name="email" type="email" autocomplete="email" placeholder="alex@domain.com" required>
       <button class="btn primary full" type="submit">Join waitlist →</button>
     </form>
-    <div id="waitlist-msg"></div>
+    <div id="waitlist-msg" role="status" aria-live="polite"></div>
   </div>
 </div>
 
-<script>
-(function(){
-  // 3 Curated Deck Cards
-  const deckData = [
-    {
-      title: "Account Manager",
-      subtitle: "Frankfurt / Hybrid · €72k–€88k OTE",
-      percentage: 96,
-      isUltraFit: false,
-      positive: "Inbound lead support, realistic B1 German bar, direct VP report line.",
-      warning: "50% travel required across DACH accounts during quarterly closings."
-    },
-    {
-      title: "Senior Product Manager",
-      subtitle: "Berlin / Remote · €85k–€100k Base",
-      percentage: 94,
-      isUltraFit: false,
-      positive: "Complete squad autonomy, async culture, published transparent equity formula.",
-      warning: "Rolling talent pipeline with scheduled quarterly intake batches."
-    },
-    {
-      title: "Senior Account Executive",
-      subtitle: "Berlin / Hybrid · €90k–€120k OTE",
-      percentage: 99,
-      isUltraFit: true,
-      positive: "Verified pay bracket, replacement for promoted rep, warm book of 45 accounts.",
-      warning: "None detected. Zero travel required and 3-round standard loop."
-    }
-  ];
-
-  let currentIndex = 0;
-  let autoTimer = null;
-  let isHovered = false;
-
-  const deckWrapper = document.getElementById('deck-wrapper');
-  const card = document.getElementById('active-card');
-  const indexLabel = document.getElementById('card-index-label');
-  const matchUnit = document.getElementById('match-unit');
-  const scoreNum = document.getElementById('score-num');
-  const scoreText = document.getElementById('score-text');
-  const scoreCircle = document.getElementById('score-circle');
-  const title = document.getElementById('card-title');
-  const subtitle = document.getElementById('card-subtitle');
-  const positive = document.getElementById('card-positive');
-  const warning = document.getElementById('card-warning');
-  const indicatorsBox = document.getElementById('deck-indicators');
-
-  function renderCard(idx) {
-    const data = deckData[idx];
-    indexLabel.textContent = `CARD ${idx + 1} OF ${deckData.length} IN YOUR DECK`;
-    
-    scoreNum.textContent = `${data.percentage}%`;
-    if(scoreText) scoreText.textContent = data.isUltraFit ? 'Excellent fit' : 'Worth your time';
-    scoreCircle.setAttribute('stroke-dasharray', `${data.percentage}, 100`);
-
-    if (data.isUltraFit) {
-      matchUnit.className = 'match-score-unit ultra';
-    } else {
-      matchUnit.className = 'match-score-unit';
-    }
-
-    title.textContent = data.title;
-    subtitle.textContent = data.subtitle;
-    positive.textContent = data.positive;
-    warning.textContent = data.warning;
-
-    const dots = indicatorsBox.querySelectorAll('.deck-indicator');
-    dots.forEach((dot, dIdx) => {
-      if (dIdx === idx) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    });
-  }
-
-  function advanceCard(animClass) {
-    card.classList.add(animClass);
-    setTimeout(() => {
-      currentIndex = (currentIndex + 1) % deckData.length;
-      renderCard(currentIndex);
-      card.classList.remove(animClass);
-      card.classList.add('anim-enter');
-      setTimeout(() => card.classList.remove('anim-enter'), 40);
-    }, 240);
-  }
-
-  function startCycle() {
-    stopCycle();
-    autoTimer = setInterval(() => {
-      if (!isHovered) advanceCard('anim-swipe-right');
-    }, 4500);
-  }
-
-  function stopCycle() {
-    if (autoTimer) clearInterval(autoTimer);
-  }
-
-  deckWrapper?.addEventListener('mouseenter', () => { isHovered = true; });
-  deckWrapper?.addEventListener('mouseleave', () => { isHovered = false; });
-
-  document.getElementById('btn-pursue')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
-  document.getElementById('btn-shortlist')?.addEventListener('click', () => advanceCard('anim-swipe-right'));
-  document.getElementById('btn-pass')?.addEventListener('click', () => advanceCard('anim-swipe-left'));
-
-  // Keep the preview stable until the visitor makes a choice.
-
-  // Waitlist Modal
+<script id="waitlist-interaction">
+(() => {
   const modal = document.getElementById('waitlist-modal');
-  const openButtons = ['open-waitlist','open-waitlist-2','open-waitlist-3','open-waitlist-4'];
-  openButtons.forEach(id => {
-    document.getElementById(id)?.addEventListener('click', () => {
-      modal.classList.add('open');
-      document.getElementById('waitlist-name').focus();
-    });
-  });
-  document.getElementById('close-waitlist')?.addEventListener('click', () => modal.classList.remove('open'));
-  modal?.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('open'); });
-
+  const modalContent = modal?.querySelector('.modal-content');
+  const closeButton = document.getElementById('close-waitlist');
+  const nameInput = document.getElementById('waitlist-name');
   const form = document.getElementById('waitlist-form');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const msg = document.getElementById('waitlist-msg');
-    const name = document.getElementById('waitlist-name')?.value.trim() || '';
-    const email = document.getElementById('waitlist-email')?.value.trim() || '';
+  const message = document.getElementById('waitlist-msg');
+  let returnFocus = null;
 
-    if (!email || !email.includes('@')) {
-      msg.textContent = 'Please enter a valid email.';
+  function openModal(trigger) {
+    if (!modal) return;
+    returnFocus = trigger;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    window.setTimeout(() => nameInput?.focus(), 0);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    returnFocus?.focus();
+  }
+
+  ['open-waitlist', 'open-waitlist-2', 'open-waitlist-3', 'open-waitlist-4'].forEach(id => {
+    const trigger = document.getElementById(id);
+    trigger?.addEventListener('click', () => openModal(trigger));
+  });
+
+  closeButton?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (!modal?.classList.contains('open')) return;
+    if (event.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    if (event.key !== 'Tab' || !modalContent) return;
+
+    const focusable = [...modalContent.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])')]
+      .filter(element => !element.disabled);
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  form?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      message.textContent = 'Please enter a valid name and email.';
+      form.reportValidity();
       return;
     }
 
+    const name = document.getElementById('waitlist-name').value.trim();
+    const email = document.getElementById('waitlist-email').value.trim();
     const subject = encodeURIComponent('JobCards early access');
-    const body = encodeURIComponent(
-      `Hi JobCards team,
+    const body = encodeURIComponent('Hi JobCards team,\n\nI’d like early access.\n\nName: ' + name + '\nEmail: ' + email + '\n');
 
-I’d like early access.
-
-Name: ${name}
-Email: ${email}
-`
-    );
-
-    msg.textContent = 'Opening your email app…';
-    window.location.href = `mailto:hello@jobcards.io?subject=${subject}&body=${body}`;
-  });
-      if (res.ok) {
-        msg.textContent = '✅ You’re on the early-access list. We’ll be in touch.';
-        form.reset();
-      } else {
-        msg.textContent = 'Something went wrong. Please try again.';
-      }
-    } catch (err) {
-      msg.textContent = 'Network error. Please try again later.';
-    }
+    message.textContent = 'Opening your email app…';
+    window.location.href = 'mailto:hello@jobcards.io?subject=' + subject + '&body=' + body;
   });
 })();
 </script>
