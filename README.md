@@ -9,6 +9,8 @@ Final card revision:
 - rules remain in the separate preference panel
 - automatic natural swipe preserved
 - manual swipe/buttons preserved
+- working early-access modal on every primary CTA
+- accessible modal controls, focus handling, Escape close, and native form validation
 - SEO and GitHub Pages files preserved
 
 Upload all files to the repository root on `main`.
