@@ -10,6 +10,7 @@ Final card revision:
 - automatic natural swipe preserved
 - manual swipe/buttons preserved
 - working early-access modal on every primary CTA
+- waitlist signups stored securely in Supabase with insert-only public access
 - accessible modal controls, focus handling, Escape close, and native form validation
 - SEO and GitHub Pages files preserved
 
