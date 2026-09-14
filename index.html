@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- GitHub Pages-ready static site. Waitlist uses mailto:hello@jobcards.io so no backend is required. -->
+<!-- GitHub Pages-ready static site. Early-access signups are stored in Supabase. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -1815,7 +1815,10 @@ body{background:
     }
   });
 
-  form?.addEventListener('submit', event => {
+  const SUPABASE_URL = 'https://owunbhxntjvvvbqniiku.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_T1788-CUfSwvCHf9tymFkQ_uS-MiTiw';
+
+  form?.addEventListener('submit', async event => {
     event.preventDefault();
     if (!form.checkValidity()) {
       message.textContent = 'Please enter a valid name and email.';
@@ -1824,12 +1827,40 @@ body{background:
     }
 
     const name = document.getElementById('waitlist-name').value.trim();
-    const email = document.getElementById('waitlist-email').value.trim();
-    const subject = encodeURIComponent('JobCards early access');
-    const body = encodeURIComponent('Hi JobCards team,\n\nI’d like early access.\n\nName: ' + name + '\nEmail: ' + email + '\n');
+    const email = document.getElementById('waitlist-email').value.trim().toLowerCase();
+    const submitButton = form.querySelector('button[type="submit"]');
 
-    message.textContent = 'Opening your email app…';
-    window.location.href = 'mailto:hello@jobcards.io?subject=' + subject + '&body=' + body;
+    submitButton.disabled = true;
+    form.setAttribute('aria-busy', 'true');
+    submitButton.textContent = 'Joining…';
+    message.textContent = '';
+
+    try {
+      const response = await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify({ name, email })
+      });
+
+      if (response.ok) {
+        message.textContent = 'You’re on the list. We’ll be in touch.';
+        form.reset();
+      } else if (response.status === 409) {
+        message.textContent = 'This email is already on the list.';
+      } else {
+        message.textContent = 'We couldn’t save your signup. Please try again.';
+      }
+    } catch {
+      message.textContent = 'Network error. Please try again later.';
+    } finally {
+      submitButton.disabled = false;
+      form.removeAttribute('aria-busy');
+      submitButton.textContent = 'Join waitlist →';
+    }
   });
 })();
 </script>
