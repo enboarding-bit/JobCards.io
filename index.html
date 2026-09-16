@@ -1418,7 +1418,9 @@ body{background:
 #waitlist-form [hidden]{display:none}
 #waitlist-form input[type="password"]{width:100%}
 .auth-switch{text-align:center;margin-top:14px;font-size:12px;color:var(--text-muted)}
-.auth-switch button{color:var(--accent-purple);font-weight:900;text-decoration:underline;text-underline-offset:3px}
+.auth-switch button,#forgot-password{color:var(--accent-purple);font-weight:900;text-decoration:underline;text-underline-offset:3px}
+#forgot-password-row{text-align:right;margin-top:7px}
+#forgot-password{border:0;background:none;padding:0;font-size:10.5px}
 #waitlist-msg{min-height:22px;margin-top:14px;text-align:center;font-size:12px;font-weight:800;color:var(--text-muted)}
 #waitlist-form button[disabled]{cursor:wait;opacity:.7}
 </style>
@@ -1763,6 +1765,7 @@ body{background:
       <input id="waitlist-email" name="email" type="email" autocomplete="email" placeholder="alex@domain.com" required>
       <label for="account-password">Password</label>
       <input id="account-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+      <div id="forgot-password-row" hidden><button type="button" id="forgot-password">Forgot password?</button></div>
       <div id="account-confirm-field">
         <label for="account-password-confirm">Confirm password</label>
         <input id="account-password-confirm" name="password-confirm" type="password" autocomplete="new-password" minlength="8" placeholder="Repeat your password" required>
@@ -1792,6 +1795,8 @@ body{background:
   const message = document.getElementById('waitlist-msg');
   const switchCopy = document.getElementById('auth-switch-copy');
   const switchButton = document.getElementById('auth-switch-button');
+  const forgotRow = document.getElementById('forgot-password-row');
+  const forgotButton = document.getElementById('forgot-password');
   let mode = 'signup';
   let returnFocus = null;
 
@@ -1809,6 +1814,7 @@ body{background:
       : 'Create your JobCards account and start setting up your search.';
     nameField.hidden = signingIn;
     confirmField.hidden = signingIn;
+    forgotRow.hidden = !signingIn;
     nameInput.required = !signingIn;
     confirmInput.required = !signingIn;
     passwordInput.autocomplete = signingIn ? 'current-password' : 'new-password';
@@ -1843,6 +1849,44 @@ body{background:
   switchButton?.addEventListener('click', () => {
     setMode(mode === 'signup' ? 'signin' : 'signup');
     window.setTimeout(() => (mode === 'signin' ? emailInput : nameInput)?.focus(), 0);
+  });
+
+  forgotButton?.addEventListener('click', async () => {
+    const email = emailInput.value.trim().toLowerCase();
+    if (!email || !emailInput.checkValidity()) {
+      message.textContent = 'Enter your email address first.';
+      emailInput.focus();
+      return;
+    }
+
+    forgotButton.disabled = true;
+    forgotButton.textContent = 'Sending…';
+    message.textContent = '';
+
+    try {
+      const response = await fetch(
+        SUPABASE_URL + '/auth/v1/recover?redirect_to=' + encodeURIComponent('https://jobcards.io/reset-password.html'),
+        {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            Authorization: 'Bearer ' + SUPABASE_PUBLISHABLE_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        }
+      );
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.message || payload.msg || 'We could not send the reset email.');
+      }
+      message.textContent = 'If an account exists for this email, a password-reset link is on its way.';
+    } catch (error) {
+      message.textContent = error.message || 'Network error. Please try again.';
+    } finally {
+      forgotButton.disabled = false;
+      forgotButton.textContent = 'Forgot password?';
+    }
   });
 
   closeButton?.addEventListener('click', closeModal);
