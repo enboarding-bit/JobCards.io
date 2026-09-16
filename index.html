@@ -1413,6 +1413,16 @@ body{background:
 }
 </style>
 
+
+<style id="account-auth-css">
+#waitlist-form [hidden]{display:none}
+#waitlist-form input[type="password"]{width:100%}
+.auth-switch{text-align:center;margin-top:14px;font-size:12px;color:var(--text-muted)}
+.auth-switch button{color:var(--accent-purple);font-weight:900;text-decoration:underline;text-underline-offset:3px}
+#waitlist-msg{min-height:22px;margin-top:14px;text-align:center;font-size:12px;font-weight:800;color:var(--text-muted)}
+#waitlist-form button[disabled]{cursor:wait;opacity:.7}
+</style>
+
 </head>
 <body>
 
@@ -1425,7 +1435,7 @@ body{background:
       <a href="#deck">Your Deck</a>
       <a href="#pipeline">Your Pipeline</a>
       <a href="#insights">Insights</a>
-      <button class="btn nav-cta" id="open-waitlist">Get early access</button>
+      <button class="btn nav-cta" id="open-waitlist">Sign in / Create account</button>
     </nav>
   </div>
 
@@ -1436,7 +1446,7 @@ body{background:
       <h1>They have an ATS.<br>You have JobCards.</h1>
       <p class="lead">AI screens the jobs. You make the call.</p>
       <div class="cta-row">
-        <button class="btn primary hero-cta" id="open-waitlist-2">Build my Deck <span aria-hidden="true">→</span></button>
+        <button class="btn primary hero-cta" id="open-waitlist-2">Create my account <span aria-hidden="true">→</span></button>
         <span class="hero-proof">No 50 tabs. No endless scrolling.</span>
       </div>
     </div>
@@ -1718,12 +1728,12 @@ body{background:
   <div class="section-kicker">THE REVERSE ATS</div>
   <h2>They screen applicants.<br>You screen opportunities.</h2>
   <p>JobCards gives applicants their own sourcing, screening, pipeline, and analytics layer—powered by AI, controlled by you.</p>
-  <button class="btn primary" id="open-waitlist-3">Build my Deck →</button>
+  <button class="btn primary" id="open-waitlist-3">Create my account →</button>
 </section>
 <div class="footer-cta">
     <div class="eyebrow">READY WHEN YOU ARE</div>
     <h2>Stop searching like it’s still 2015.</h2>
-    <button class="btn primary" id="open-waitlist-4">Get early access →</button>
+    <button class="btn primary" id="open-waitlist-4">Start with JobCards →</button>
   </div>
 
   </main>
@@ -1733,25 +1743,34 @@ body{background:
   </div>
 </div>
 
-<!-- Waitlist Modal -->
+<!-- Account Modal -->
 <div id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="waitlist-title" aria-describedby="waitlist-description" aria-hidden="true">
   <div class="modal-content" tabindex="-1">
     <div class="modal-row">
       <div>
-        <div class="eyebrow">JOIN WAITLIST</div>
+        <div class="eyebrow" id="auth-eyebrow">CREATE ACCOUNT</div>
         <h2 id="waitlist-title" style="font-size:26px;font-weight:900;letter-spacing:-1px;margin:4px 0;color:var(--text-main)">Build your first Deck.</h2>
-        <p id="waitlist-description" style="font-size:13px;color:var(--text-muted);font-weight:500">Enter your details and we’ll prepare an early-access email for you.</p>
+        <p id="waitlist-description" style="font-size:13px;color:var(--text-muted);font-weight:500">Create your JobCards account and start setting up your search.</p>
       </div>
-      <button class="close" id="close-waitlist" type="button" aria-label="Close early-access form">×</button>
+      <button class="close" id="close-waitlist" type="button" aria-label="Close account form">×</button>
     </div>
     <form id="waitlist-form" action="#" method="POST">
-      <label for="waitlist-name">First name</label>
-      <input id="waitlist-name" name="name" autocomplete="given-name" placeholder="Alex" required>
+      <div id="account-name-field">
+        <label for="waitlist-name">First name</label>
+        <input id="waitlist-name" name="name" autocomplete="given-name" placeholder="Alex" required>
+      </div>
       <label for="waitlist-email">Email</label>
       <input id="waitlist-email" name="email" type="email" autocomplete="email" placeholder="alex@domain.com" required>
-      <button class="btn primary full" type="submit">Join waitlist →</button>
+      <label for="account-password">Password</label>
+      <input id="account-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+      <div id="account-confirm-field">
+        <label for="account-password-confirm">Confirm password</label>
+        <input id="account-password-confirm" name="password-confirm" type="password" autocomplete="new-password" minlength="8" placeholder="Repeat your password" required>
+      </div>
+      <button class="btn primary full" type="submit">Create account →</button>
     </form>
     <div id="waitlist-msg" role="status" aria-live="polite"></div>
+    <p class="auth-switch"><span id="auth-switch-copy">Already have an account?</span> <button type="button" id="auth-switch-button">Sign in</button></p>
   </div>
 </div>
 
@@ -1760,10 +1779,43 @@ body{background:
   const modal = document.getElementById('waitlist-modal');
   const modalContent = modal?.querySelector('.modal-content');
   const closeButton = document.getElementById('close-waitlist');
-  const nameInput = document.getElementById('waitlist-name');
   const form = document.getElementById('waitlist-form');
+  const nameField = document.getElementById('account-name-field');
+  const nameInput = document.getElementById('waitlist-name');
+  const emailInput = document.getElementById('waitlist-email');
+  const passwordInput = document.getElementById('account-password');
+  const confirmField = document.getElementById('account-confirm-field');
+  const confirmInput = document.getElementById('account-password-confirm');
+  const eyebrow = document.getElementById('auth-eyebrow');
+  const title = document.getElementById('waitlist-title');
+  const description = document.getElementById('waitlist-description');
   const message = document.getElementById('waitlist-msg');
+  const switchCopy = document.getElementById('auth-switch-copy');
+  const switchButton = document.getElementById('auth-switch-button');
+  let mode = 'signup';
   let returnFocus = null;
+
+  const SUPABASE_URL = 'https://owunbhxntjvvvbqniiku.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_T1788-CUfSwvCHf9tymFkQ_uS-MiTiw';
+
+  function setMode(nextMode) {
+    mode = nextMode;
+    const signingIn = mode === 'signin';
+    eyebrow.textContent = signingIn ? 'WELCOME BACK' : 'CREATE ACCOUNT';
+    title.textContent = signingIn ? 'Sign in to JobCards.' : 'Build your first Deck.';
+    description.textContent = signingIn
+      ? 'Continue to your Deck, pipeline, and job-search settings.'
+      : 'Create your JobCards account and start setting up your search.';
+    nameField.hidden = signingIn;
+    confirmField.hidden = signingIn;
+    nameInput.required = !signingIn;
+    confirmInput.required = !signingIn;
+    passwordInput.autocomplete = signingIn ? 'current-password' : 'new-password';
+    form.querySelector('button[type="submit"]').textContent = signingIn ? 'Sign in →' : 'Create account →';
+    switchCopy.textContent = signingIn ? 'New to JobCards?' : 'Already have an account?';
+    switchButton.textContent = signingIn ? 'Create account' : 'Sign in';
+    message.textContent = '';
+  }
 
   function openModal(trigger) {
     if (!modal) return;
@@ -1771,7 +1823,7 @@ body{background:
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
-    window.setTimeout(() => nameInput?.focus(), 0);
+    window.setTimeout(() => (mode === 'signin' ? emailInput : nameInput)?.focus(), 0);
   }
 
   function closeModal() {
@@ -1785,6 +1837,11 @@ body{background:
   ['open-waitlist', 'open-waitlist-2', 'open-waitlist-3', 'open-waitlist-4'].forEach(id => {
     const trigger = document.getElementById(id);
     trigger?.addEventListener('click', () => openModal(trigger));
+  });
+
+  switchButton?.addEventListener('click', () => {
+    setMode(mode === 'signup' ? 'signin' : 'signup');
+    window.setTimeout(() => (mode === 'signin' ? emailInput : nameInput)?.focus(), 0);
   });
 
   closeButton?.addEventListener('click', closeModal);
@@ -1801,7 +1858,7 @@ body{background:
     if (event.key !== 'Tab' || !modalContent) return;
 
     const focusable = [...modalContent.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])')]
-      .filter(element => !element.disabled);
+      .filter(element => !element.disabled && !element.closest('[hidden]'));
     if (!focusable.length) return;
 
     const first = focusable[0];
@@ -1815,53 +1872,91 @@ body{background:
     }
   });
 
-  const SUPABASE_URL = 'https://owunbhxntjvvvbqniiku.supabase.co';
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_T1788-CUfSwvCHf9tymFkQ_uS-MiTiw';
+  function saveSession(payload) {
+    if (!payload?.access_token) return false;
+    localStorage.setItem('jobcards-session', JSON.stringify({
+      access_token: payload.access_token,
+      refresh_token: payload.refresh_token,
+      expires_at: payload.expires_at,
+      user: payload.user
+    }));
+    return true;
+  }
 
   form?.addEventListener('submit', async event => {
     event.preventDefault();
+    message.textContent = '';
+
     if (!form.checkValidity()) {
-      message.textContent = 'Please enter a valid name and email.';
+      message.textContent = 'Please complete all fields correctly.';
       form.reportValidity();
       return;
     }
 
-    const name = document.getElementById('waitlist-name').value.trim();
-    const email = document.getElementById('waitlist-email').value.trim().toLowerCase();
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
     const submitButton = form.querySelector('button[type="submit"]');
+
+    if (mode === 'signup' && password !== confirmInput.value) {
+      message.textContent = 'Your passwords do not match.';
+      confirmInput.focus();
+      return;
+    }
 
     submitButton.disabled = true;
     form.setAttribute('aria-busy', 'true');
-    submitButton.textContent = 'Joining…';
-    message.textContent = '';
+    submitButton.textContent = mode === 'signin' ? 'Signing in…' : 'Creating account…';
 
     try {
-      const response = await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+      const endpoint = mode === 'signin'
+        ? SUPABASE_URL + '/auth/v1/token?grant_type=password'
+        : SUPABASE_URL + '/auth/v1/signup';
+      const body = mode === 'signin'
+        ? { email, password }
+        : { email, password, data: { first_name: name } };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           apikey: SUPABASE_PUBLISHABLE_KEY,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal'
+          Authorization: 'Bearer ' + SUPABASE_PUBLISHABLE_KEY,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email })
+        body: JSON.stringify(body)
       });
+      const payload = await response.json().catch(() => ({}));
 
-      if (response.ok) {
-        message.textContent = 'You’re on the list. We’ll be in touch.';
-        form.reset();
-      } else if (response.status === 409) {
-        message.textContent = 'This email is already on the list.';
-      } else {
-        message.textContent = 'We couldn’t save your signup. Please try again.';
+      if (!response.ok) {
+        const detail = payload.msg || payload.message || payload.error_description || payload.error;
+        if (/already registered|already exists/i.test(detail || '')) {
+          throw new Error('An account already exists for this email. Choose Sign in below.');
+        }
+        throw new Error(detail || 'We could not complete this request. Please try again.');
       }
-    } catch {
-      message.textContent = 'Network error. Please try again later.';
+
+      const signedIn = saveSession(payload);
+      if (mode === 'signin' || signedIn) {
+        message.textContent = mode === 'signin'
+          ? 'Signed in successfully. Welcome back.'
+          : 'Your account is ready. You are signed in.';
+        form.reset();
+        document.dispatchEvent(new CustomEvent('jobcards:authenticated', { detail: payload.user }));
+      } else {
+        message.textContent = 'Account created. Check your email to confirm your address, then sign in.';
+        form.reset();
+        setMode('signin');
+      }
+    } catch (error) {
+      message.textContent = error.message || 'Network error. Please try again later.';
     } finally {
       submitButton.disabled = false;
       form.removeAttribute('aria-busy');
-      submitButton.textContent = 'Join waitlist →';
+      submitButton.textContent = mode === 'signin' ? 'Sign in →' : 'Create account →';
     }
   });
+
+  setMode('signup');
 })();
 </script>
 
