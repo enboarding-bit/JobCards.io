@@ -1,4 +1,4 @@
-# JobCards.io — Final polished version
+# JobCards.io
 
 Final card revision:
 - larger, more readable job title and metadata
@@ -9,8 +9,9 @@ Final card revision:
 - rules remain in the separate preference panel
 - automatic natural swipe preserved
 - manual swipe/buttons preserved
-- working early-access modal on every primary CTA
-- waitlist signups stored securely in Supabase with insert-only public access
+- working create-account and sign-in modal on every primary CTA
+- account authentication powered by Supabase Auth
+- authenticated sessions persisted in the browser
 - accessible modal controls, focus handling, Escape close, and native form validation
 - SEO and GitHub Pages files preserved
 
