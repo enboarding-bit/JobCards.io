@@ -1797,7 +1797,7 @@ body{background:
 
   const SUPABASE_URL = 'https://owunbhxntjvvvbqniiku.supabase.co';
   const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_T1788-CUfSwvCHf9tymFkQ_uS-MiTiw';
-  const AUTH_REDIRECT_URL = 'https://jobcards.io/';
+  const AUTH_REDIRECT_URL = 'https://jobcards.io/app.html';
 
   function setMode(nextMode) {
     mode = nextMode;
@@ -1976,6 +1976,7 @@ body{background:
           : 'Your account is ready. You are signed in.';
         form.reset();
         document.dispatchEvent(new CustomEvent('jobcards:authenticated', { detail: payload.user }));
+        window.setTimeout(() => { window.location.href = '/app.html'; }, 450);
       } else {
         message.textContent = 'Account created. Check your email to confirm your address, then sign in.';
         form.reset();
@@ -1991,6 +1992,12 @@ body{background:
   });
 
   setMode('signup');
+  const query = new URLSearchParams(window.location.search);
+  if (query.get('signin') === '1') {
+    setMode('signin');
+    openModal(document.getElementById('open-waitlist'));
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
   handleAuthRedirect();
 })();
 </script>
