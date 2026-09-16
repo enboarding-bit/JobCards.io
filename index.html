@@ -1797,6 +1797,7 @@ body{background:
 
   const SUPABASE_URL = 'https://owunbhxntjvvvbqniiku.supabase.co';
   const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_T1788-CUfSwvCHf9tymFkQ_uS-MiTiw';
+  const AUTH_REDIRECT_URL = 'https://jobcards.io/';
 
   function setMode(nextMode) {
     mode = nextMode;
@@ -1874,13 +1875,46 @@ body{background:
 
   function saveSession(payload) {
     if (!payload?.access_token) return false;
+    const expiresAt = payload.expires_at || (
+      payload.expires_in ? Math.floor(Date.now() / 1000) + Number(payload.expires_in) : null
+    );
     localStorage.setItem('jobcards-session', JSON.stringify({
       access_token: payload.access_token,
       refresh_token: payload.refresh_token,
-      expires_at: payload.expires_at,
-      user: payload.user
+      expires_at: expiresAt,
+      user: payload.user || null
     }));
     return true;
+  }
+
+  async function handleAuthRedirect() {
+    if (!window.location.hash) return;
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = params.get('access_token');
+    const errorDescription = params.get('error_description');
+
+    if (!accessToken && !errorDescription) return;
+
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    openModal(document.getElementById('open-waitlist'));
+
+    if (errorDescription) {
+      setMode('signin');
+      message.textContent = decodeURIComponent(errorDescription.replace(/\+/g, ' '));
+      return;
+    }
+
+    const sessionPayload = {
+      access_token: accessToken,
+      refresh_token: params.get('refresh_token'),
+      expires_in: params.get('expires_in'),
+      token_type: params.get('token_type')
+    };
+    saveSession(sessionPayload);
+    setMode('signin');
+    message.textContent = 'Email confirmed. Your account is ready and you are signed in.';
+    form.reset();
+    document.dispatchEvent(new CustomEvent('jobcards:authenticated'));
   }
 
   form?.addEventListener('submit', async event => {
@@ -1911,7 +1945,7 @@ body{background:
     try {
       const endpoint = mode === 'signin'
         ? SUPABASE_URL + '/auth/v1/token?grant_type=password'
-        : SUPABASE_URL + '/auth/v1/signup';
+        : SUPABASE_URL + '/auth/v1/signup?redirect_to=' + encodeURIComponent(AUTH_REDIRECT_URL);
       const body = mode === 'signin'
         ? { email, password }
         : { email, password, data: { first_name: name } };
@@ -1957,6 +1991,7 @@ body{background:
   });
 
   setMode('signup');
+  handleAuthRedirect();
 })();
 </script>
 
