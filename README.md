@@ -1,18 +1,35 @@
 # JobCards.io
 
-Final card revision:
-- larger, more readable job title and metadata
-- larger signal/warning copy
-- stronger score and company mark
-- card remains contained and phone-like
-- no rules inside the card
-- rules remain in the separate preference panel
-- automatic natural swipe preserved
-- manual swipe/buttons preserved
-- working create-account and sign-in modal on every primary CTA
-- account authentication powered by Supabase Auth
-- authenticated sessions persisted in the browser
-- accessible modal controls, focus handling, Escape close, and native form validation
-- SEO and GitHub Pages files preserved
+JobCards is an applicant-side ATS: a private workspace for screening job opportunities, making decisions, tracking applications, and learning which parts of the market respond best.
 
-Upload all files to the repository root on `main`.
+## Current product
+
+- Public landing page at `index.html`
+- Supabase email/password account creation and sign-in
+- Authenticated workspace at `app.html`
+- First-use preference onboarding
+- Curated starter job deck
+- Pass, Shortlist, and Pursue decisions
+- Application pipeline with stage changes
+- Early applicant analytics
+- Persistent sessions with refresh-token handling
+- Responsive desktop and mobile layouts
+
+Starter jobs are labeled as samples. Live sourcing and AI scoring are the next product layer.
+
+## Data and security
+
+Supabase Auth manages accounts. Product data is stored in `profiles`, `user_preferences`, `jobs`, and `job_actions`.
+
+Row-level security is enabled on every product table. Profiles, preferences, and pipeline activity are restricted to their owning user. The job catalog is readable only by authenticated users. Browser code contains only the Supabase publishable key; no secret or service-role key is exposed.
+
+The versioned schema is in:
+
+`supabase/migrations/20260916102800_create_jobcards_mvp.sql`
+
+## Deployment
+
+The repository deploys as a static GitHub Pages site from the root of `main`. Supabase Auth URL Configuration should use:
+
+- Site URL: `https://jobcards.io/`
+- Redirect URL: `https://jobcards.io/**`
