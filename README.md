@@ -6,6 +6,7 @@ JobCards is an applicant-side ATS: a private workspace for screening job opportu
 
 - Public landing page at `index.html`
 - Supabase email/password account creation and sign-in
+- Password recovery email and secure password-update page
 - Authenticated workspace at `app.html`
 - First-use preference onboarding
 - Curated starter job deck
